@@ -14,14 +14,12 @@ var leaflet = require('leaflet');
 
 var MapComponent = Backbone.View.extend({
 
-	initialize: function(elSelector) {
-		this.elSelector = elSelector;
-	},
+	el: '#map-container',
 
 	template: _.template(require('./templates/map.html')),
 
 	render: function(data) {
-		document.querySelector(this.elSelector).innerHTML = this.template(data);
+		this.el.innerHTML = this.template(data);
 
 		var map = L.map(document.querySelector('#map')).setView([51.505, -0.09], 13);
 
@@ -38,14 +36,20 @@ var Backbone = require('backbone');
 
 var SidebarComponent = Backbone.View.extend({
 
-	initialize: function(elSelector) {
-		this.elSelector = elSelector;
-	},
+	el: "#sidebar-container",
 
 	template: _.template(require('./templates/sidebar.html')),
 
 	render: function(data) {
-		document.querySelector(this.elSelector).innerHTML = this.template(data);
+		this.el.innerHTML = this.template(data);
+	},
+
+	events: {
+		"click #button": "slideSidebar"
+	},
+
+	handleClick: function() {
+		//animation here
 	}
 
 });
@@ -55,7 +59,7 @@ module.exports = SidebarComponent;
 module.exports = "<div id=\"map\"></div>\n<div id=\"searchbar\">\n\t<input type=\"text\" placeholder=\"find a restaurant\">\n</div>\n<div id=\"controls\">\n\t<div id=\"sort\"></div>\n\t<div id=\"filter\"></div>\n</div>\n";
 
 },{}],5:[function(require,module,exports){
-module.exports = "<div class=\"sidebar\">\n\tall that sidebar info\n</div>";
+module.exports = "<div class=\"sidebar\">\n\t<span id=\"event\">all that sidebar info</span>\n</div>";
 
 },{}],6:[function(require,module,exports){
 var _ = require('lodash');
@@ -67,18 +71,15 @@ var SidebarComponent = require('../components/sidebar.js');
 
 var HomeView = Backbone.View.extend({
 
-	initialize: function() {
-		this.map = new MapComponent('#map-container');
-		this.sidebar = new SidebarComponent('#sidebar-container');
-	},
-
 	el: '#app',
 
 	template: _.template(require('./templates/home.html')),
 
 	render: function(data) {
 		this.el.innerHTML = this.template(data);
+		this.map = new MapComponent('#map-container');
 		this.map.render();
+		this.sidebar = new SidebarComponent();
 		this.sidebar.render();
 	}
 });

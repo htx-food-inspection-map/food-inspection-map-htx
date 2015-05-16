@@ -3,14 +3,20 @@ var Backbone = require('backbone');
 
 var SidebarComponent = Backbone.View.extend({
 
-	initialize: function(elSelector) {
-		this.elSelector = elSelector;
-	},
+	el: "#sidebar-container",
 
 	template: _.template(require('./templates/sidebar.html')),
 
 	render: function(data) {
-		document.querySelector(this.elSelector).innerHTML = this.template(data);
+		this.el.innerHTML = this.template(data);
+	},
+
+	events: {
+		"click #button": "slideSidebar"
+	},
+
+	handleClick: function() {
+		//animation here
 	}
 
 });

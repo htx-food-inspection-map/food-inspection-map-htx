@@ -4,14 +4,12 @@ var leaflet = require('leaflet');
 
 var MapComponent = Backbone.View.extend({
 
-	initialize: function(elSelector) {
-		this.elSelector = elSelector;
-	},
+	el: '#map-container',
 
 	template: _.template(require('./templates/map.html')),
 
 	render: function(data) {
-		document.querySelector(this.elSelector).innerHTML = this.template(data);
+		this.el.innerHTML = this.template(data);
 
 		var map = L.map(document.querySelector('#map')).setView([51.505, -0.09], 13);
 
