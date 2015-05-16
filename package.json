@@ -16,11 +16,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "backbone": "^1.2.0",
     "express": "^4.12.3"
   },
   "devDependencies": {
     "autoprefixer": "^5.1.1",
+    "backbone": "^1.2.0",
     "browserify": "^10.2.0",
     "gulp": "^3.8.11",
     "jquery": "^2.1.4",

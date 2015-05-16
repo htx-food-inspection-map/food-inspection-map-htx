@@ -4,8 +4,20 @@ var leaflet = require('leaflet');
 
 var MapComponent = Backbone.View.extend({
 
-	render: function() {
+	initialize: function(elSelector) {
+		this.elSelector = elSelector;
+	},
 
+	template: _.template(require('./templates/map.html')),
+
+	render: function(data) {
+		document.querySelector(this.elSelector).innerHTML = this.template(data);
+
+		var map = L.map(document.querySelector('#map')).setView([51.505, -0.09], 13);
+
+		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		}).addTo(map);
 	}
 });
 

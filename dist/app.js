@@ -7,19 +7,23 @@ function app() {
 	// init router
 	var appRouter = new Router();
 }
-},{"./router":4}],2:[function(require,module,exports){
+},{"./router":8}],2:[function(require,module,exports){
 var _ = require('lodash');
 var Backbone = require('backbone');
-var L = require('leaflet')
+var leaflet = require('leaflet');
 
-var HomeView = Backbone.View.extend({
+var MapComponent = Backbone.View.extend({
 
-	el: '#app',
+	initialize: function(elSelector) {
+		this.elSelector = elSelector;
+	},
 
-	template: _.template(require('./templates/home.html')),
+	template: _.template(require('./templates/map.html')),
 
 	render: function(data) {
-		var map = L.map(this.el).setView([51.505, -0.09], 13);
+		document.querySelector(this.elSelector).innerHTML = this.template(data);
+
+		var map = L.map(document.querySelector('#map')).setView([51.505, -0.09], 13);
 
 		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -27,11 +31,63 @@ var HomeView = Backbone.View.extend({
 	}
 });
 
-module.exports = HomeView;
-},{"./templates/home.html":3,"backbone":5,"leaflet":8,"lodash":9}],3:[function(require,module,exports){
-module.exports = "<div class=\"home\">\n\thome render\n</div>";
+module.exports = MapComponent;
+},{"./templates/map.html":4,"backbone":9,"leaflet":12,"lodash":13}],3:[function(require,module,exports){
+var _ = require('lodash');
+var Backbone = require('backbone');
 
-},{}],4:[function(require,module,exports){
+var SidebarComponent = Backbone.View.extend({
+
+	initialize: function(elSelector) {
+		this.elSelector = elSelector;
+	},
+
+	template: _.template(require('./templates/sidebar.html')),
+
+	render: function(data) {
+		document.querySelector(this.elSelector).innerHTML = this.template(data);
+	}
+
+});
+
+module.exports = SidebarComponent;
+},{"./templates/sidebar.html":5,"backbone":9,"lodash":13}],4:[function(require,module,exports){
+module.exports = "<div id=\"map\"></div>\n<div id=\"searchbar\">\n\t<input type=\"text\" placeholder=\"find a restaurant\">\n</div>\n<div id=\"controls\">\n\t<div id=\"sort\"></div>\n\t<div id=\"filter\"></div>\n</div>\n";
+
+},{}],5:[function(require,module,exports){
+module.exports = "<div class=\"sidebar\">\n\tall that sidebar info\n</div>";
+
+},{}],6:[function(require,module,exports){
+var _ = require('lodash');
+var Backbone = require('backbone');
+var L = require('leaflet');
+
+var MapComponent = require('../components/map.js');
+var SidebarComponent = require('../components/sidebar.js');
+
+var HomeView = Backbone.View.extend({
+
+	initialize: function() {
+		this.map = new MapComponent('#map-container');
+		this.sidebar = new SidebarComponent('#sidebar-container');
+	},
+
+	el: '#app',
+
+	template: _.template(require('./templates/home.html')),
+
+	render: function(data) {
+		this.el.innerHTML = this.template(data);
+		this.map.render();
+		this.sidebar.render();
+	}
+});
+
+module.exports = HomeView;
+},{"../components/map.js":2,"../components/sidebar.js":3,"./templates/home.html":7,"backbone":9,"leaflet":12,"lodash":13}],7:[function(require,module,exports){
+module.exports = "<div id=\"map-container\"></div>\n<div id=\"sidebar-container\"></div>\n";
+
+},{}],8:[function(require,module,exports){
 var Backbone = require('backbone');
 var HomeView = require('./pages/home.js');
 
@@ -52,7 +108,7 @@ var Router = Backbone.Router.extend({
 });
 
 module.exports = Router;
-},{"./pages/home.js":2,"backbone":5}],5:[function(require,module,exports){
+},{"./pages/home.js":6,"backbone":9}],9:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.2.0
 
@@ -1924,7 +1980,7 @@ module.exports = Router;
 }));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":7,"underscore":6}],6:[function(require,module,exports){
+},{"jquery":11,"underscore":10}],10:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -3474,7 +3530,7 @@ module.exports = Router;
   }
 }.call(this));
 
-},{}],7:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.4
  * http://jquery.com/
@@ -12686,7 +12742,7 @@ return jQuery;
 
 }));
 
-},{}],8:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /*
  Leaflet, a JavaScript library for mobile-friendly interactive maps. http://leafletjs.com
  (c) 2010-2013, Vladimir Agafonkin
@@ -21867,7 +21923,7 @@ L.Map.include({
 
 
 }(window, document));
-},{}],9:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 (function (global){
 /**
  * @license
