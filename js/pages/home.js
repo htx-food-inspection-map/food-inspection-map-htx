@@ -13,7 +13,7 @@ var HomeView = Backbone.View.extend({
 
 	render: function(data) {
 		this.el.innerHTML = this.template(data);
-		this.map = new MapComponent('#map-container');
+		this.map = new MapComponent();
 		this.map.render();
 		this.sidebar = new SidebarComponent();
 		this.sidebar.render();

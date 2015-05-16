@@ -7,10 +7,29 @@ function app() {
 	// init router
 	var appRouter = new Router();
 }
-},{"./router":8}],2:[function(require,module,exports){
+},{"./router":12}],2:[function(require,module,exports){
+var _ = require('lodash');
+var Backbone = require('backbone');
+
+var FilterComponent = Backbone.View.extend({
+
+	el: '#filter',
+
+	template: _.template(require('./templates/filter.html')),
+
+	render: function(data) {
+		this.el.innerHTML = this.template(data);
+	}
+});
+
+module.exports = FilterComponent;
+},{"./templates/filter.html":6,"backbone":13,"lodash":17}],3:[function(require,module,exports){
 var _ = require('lodash');
 var Backbone = require('backbone');
 var leaflet = require('leaflet');
+
+var SortComponent = require('./sort');
+var FilterComponent = require('./filter')
 
 var MapComponent = Backbone.View.extend({
 
@@ -20,6 +39,10 @@ var MapComponent = Backbone.View.extend({
 
 	render: function(data) {
 		this.el.innerHTML = this.template(data);
+		this.sort = new SortComponent();
+		this.sort.render();
+		this.filter = new FilterComponent();
+		this.filter.render();
 
 		var map = L.map(document.querySelector('#map')).setView([51.505, -0.09], 13);
 
@@ -30,7 +53,7 @@ var MapComponent = Backbone.View.extend({
 });
 
 module.exports = MapComponent;
-},{"./templates/map.html":4,"backbone":9,"leaflet":12,"lodash":13}],3:[function(require,module,exports){
+},{"./filter":2,"./sort":5,"./templates/map.html":7,"backbone":13,"leaflet":16,"lodash":17}],4:[function(require,module,exports){
 var _ = require('lodash');
 var Backbone = require('backbone');
 
@@ -55,13 +78,35 @@ var SidebarComponent = Backbone.View.extend({
 });
 
 module.exports = SidebarComponent;
-},{"./templates/sidebar.html":5,"backbone":9,"lodash":13}],4:[function(require,module,exports){
+},{"./templates/sidebar.html":8,"backbone":13,"lodash":17}],5:[function(require,module,exports){
+var _ = require('lodash');
+var Backbone = require('backbone');
+
+var SortComponent = Backbone.View.extend({
+
+	el: '#sort',
+
+	template: _.template(require('./templates/sort.html')),
+
+	render: function(data) {
+		this.el.innerHTML = this.template(data);
+	}
+});
+
+module.exports = SortComponent;
+},{"./templates/sort.html":9,"backbone":13,"lodash":17}],6:[function(require,module,exports){
+module.exports = "<span>Filter me</span>";
+
+},{}],7:[function(require,module,exports){
 module.exports = "<div id=\"map\"></div>\n<div id=\"searchbar\">\n\t<input type=\"text\" placeholder=\"find a restaurant\">\n</div>\n<div id=\"controls\">\n\t<div id=\"sort\"></div>\n\t<div id=\"filter\"></div>\n</div>\n";
 
-},{}],5:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 module.exports = "<div class=\"sidebar\">\n\t<span id=\"event\">all that sidebar info</span>\n</div>";
 
-},{}],6:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
+module.exports = "<span>Sort me</span>";
+
+},{}],10:[function(require,module,exports){
 var _ = require('lodash');
 var Backbone = require('backbone');
 var L = require('leaflet');
@@ -77,7 +122,7 @@ var HomeView = Backbone.View.extend({
 
 	render: function(data) {
 		this.el.innerHTML = this.template(data);
-		this.map = new MapComponent('#map-container');
+		this.map = new MapComponent();
 		this.map.render();
 		this.sidebar = new SidebarComponent();
 		this.sidebar.render();
@@ -85,10 +130,10 @@ var HomeView = Backbone.View.extend({
 });
 
 module.exports = HomeView;
-},{"../components/map.js":2,"../components/sidebar.js":3,"./templates/home.html":7,"backbone":9,"leaflet":12,"lodash":13}],7:[function(require,module,exports){
+},{"../components/map.js":3,"../components/sidebar.js":4,"./templates/home.html":11,"backbone":13,"leaflet":16,"lodash":17}],11:[function(require,module,exports){
 module.exports = "<div id=\"map-container\"></div>\n<div id=\"sidebar-container\"></div>\n";
 
-},{}],8:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var Backbone = require('backbone');
 var HomeView = require('./pages/home.js');
 
@@ -109,7 +154,7 @@ var Router = Backbone.Router.extend({
 });
 
 module.exports = Router;
-},{"./pages/home.js":6,"backbone":9}],9:[function(require,module,exports){
+},{"./pages/home.js":10,"backbone":13}],13:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.2.0
 
@@ -1981,7 +2026,7 @@ module.exports = Router;
 }));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":11,"underscore":10}],10:[function(require,module,exports){
+},{"jquery":15,"underscore":14}],14:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -3531,7 +3576,7 @@ module.exports = Router;
   }
 }.call(this));
 
-},{}],11:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.4
  * http://jquery.com/
@@ -12743,7 +12788,7 @@ return jQuery;
 
 }));
 
-},{}],12:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /*
  Leaflet, a JavaScript library for mobile-friendly interactive maps. http://leafletjs.com
  (c) 2010-2013, Vladimir Agafonkin
@@ -21924,7 +21969,7 @@ L.Map.include({
 
 
 }(window, document));
-},{}],13:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function (global){
 /**
  * @license
