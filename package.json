@@ -9,22 +9,26 @@
     "watch": "parallelshell 'npm run watch:css' 'npm run watch:js'",
     "watch:css": "watch 'npm run build:css' ./scss",
     "build:css": "node-sass ./scss/style.scss ./dist/style.css; autoprefixer ./dist/style.css; echo 'sassed'",
-    "watch:js": "watchify ./js/app.js -o ./dist/app.js -v",
+    "watch:js": "watchify ./js/app.js -t stringify -o ./dist/app.js -v",
     "ignores": "echo 'node_modules' > .gitignore",
     "postinstall": "npm run ignores"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "backbone": "^1.2.0",
     "express": "^4.12.3"
   },
   "devDependencies": {
     "autoprefixer": "^5.1.1",
-    "backbone": "^1.2.0",
     "browserify": "^10.2.0",
     "gulp": "^3.8.11",
+    "jquery": "^2.1.4",
+    "leaflet": "^0.7.3",
+    "lodash": "^3.8.0",
     "node-sass": "^3.1.1",
     "parallelshell": "^1.1.1",
+    "stringify": "^3.1.0",
     "watch": "^0.16.0",
     "watchify": "^3.2.1"
   }
