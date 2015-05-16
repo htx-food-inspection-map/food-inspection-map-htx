@@ -1,0 +1,31 @@
+{
+  "name": "food-map",
+  "version": "1.0.0",
+  "description": "map of health inspections in houston",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "node server.js & npm run watch",
+    "watch": "parallelshell 'npm run watch:css' 'npm run watch:js'",
+    "watch:css": "watch 'npm run build:css' ./scss",
+    "build:css": "node-sass ./scss/style.scss ./dist/style.css; autoprefixer ./dist/style.css; echo 'sassed'",
+    "watch:js": "watchify ./js/app.js -o ./dist/app.js -v",
+    "ignores": "echo 'node_modules' > .gitignore",
+    "postinstall": "npm run ignores"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.12.3"
+  },
+  "devDependencies": {
+    "autoprefixer": "^5.1.1",
+    "backbone": "^1.2.0",
+    "browserify": "^10.2.0",
+    "gulp": "^3.8.11",
+    "node-sass": "^3.1.1",
+    "parallelshell": "^1.1.1",
+    "watch": "^0.16.0",
+    "watchify": "^3.2.1"
+  }
+}
