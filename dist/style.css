@@ -6241,8 +6241,32 @@ button.close {
   background: #fff;
   border: 1px solid #666; }
 
-#map-container {
-  height: 80vh; }
+body, html, #app, #main-container, #map, #map-container {
+  height: 100%; }
 
-#map {
-  height: 80%; }
+#sidebar {
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.75);
+  width: 30%;
+  height: 100%;
+  right: 0px;
+  top: 0px;
+  -webkit-transition: right 0.5s;
+          transition: right 0.5s; }
+
+#searchbar {
+  position: absolute;
+  top: 20px;
+  left: 60px;
+  width: 25%; }
+
+#controls {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background-color: rgba(255, 255, 255, 0.75); }
+
+#toggle-sidebar {
+  position: absolute;
+  margin-left: -100px;
+  margin-top: 20px; }

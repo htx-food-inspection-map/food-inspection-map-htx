@@ -1,10 +1,40 @@
 @import "../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 @import "./leaflet.scss";
 
-#map-container {
-	height: 80vh;
+$panel-color: rgba(255, 255, 255, 0.75);
+$margin-buffer: 20px;
+
+body, html, #app, #main-container, #map, #map-container {
+	height: 100%;
 }
 
-#map {
-	height: 80%;
+#sidebar {
+	position: fixed;
+	background-color: $panel-color;
+	width: 30%;
+	height: 100%;
+	right: 0px;
+	top: 0px;
+	transition: right 0.5s;
 }
+
+#searchbar {
+	position: absolute;
+	top: $margin-buffer;
+	left: 60px;
+	width: 25%;
+}
+
+#controls {
+	position: absolute;
+	bottom: $margin-buffer;
+	left: $margin-buffer;
+	background-color: $panel-color;
+}
+
+#toggle-sidebar {
+	position: absolute;
+	margin-left: -100px;
+	margin-top: $margin-buffer;
+}
+

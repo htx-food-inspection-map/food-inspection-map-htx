@@ -7,16 +7,31 @@ var SidebarComponent = Backbone.View.extend({
 
 	template: _.template(require('./templates/sidebar.html')),
 
+	initialize: function() {
+		this.showing = true;
+	},
+
 	render: function(data) {
 		this.el.innerHTML = this.template(data);
 	},
 
 	events: {
-		"click #button": "slideSidebar"
+		"click #toggle-sidebar": "slideSidebar"
 	},
 
-	handleClick: function() {
-		//animation here
+	slideSidebar: function() {
+
+		this.showing = !this.showing;
+		console.log(this.$el.outerWidth())
+		if(this.showing){
+			this.$el.css("right", 0);
+			this.$el.find("#toggle-sidebar").html("HIDE");
+		}
+		else{
+			this.$el.css("right", -1 * this.$el.outerWidth());
+			this.$el.find("#toggle-sidebar").html("SHOW");
+		}
+
 	}
 
 });
