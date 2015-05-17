@@ -9,7 +9,7 @@ var SidebarComponent = Backbone.View.extend({
 
 	initialize: function() {
 		this.showing = false;
-		this.vendor = {};
+		this.vendor = {}
 	},
 
 	getProps: function() {
@@ -30,18 +30,14 @@ var SidebarComponent = Backbone.View.extend({
 		return props;
 	},
 
-	update: function(data) {
-		if(!_.isEmpty(data)){
-			this.showing = true;
-			this.vendor = _.clone(data);
-		}
-	},
-
 	render: function(data) {
-		this.update(data);
-		this.el.innerHTML = this.template({props: this.getProps(), vendor: this.vendor});
-
+		if (!_.isEmpty(data)) {
+			this.vendor = _.clone(data)
+		}
+		if (_.isEmpty(this.vendor)) return;
+		else this.showing = true;
 		this.el.className = 'container ' + this.getProps().className;
+		this.el.innerHTML = this.template({props: this.getProps(), vendor: this.vendor});
 	},
 
 	events: {
@@ -49,11 +45,8 @@ var SidebarComponent = Backbone.View.extend({
 	},
 
 	slideSidebar: function() {
-
 		this.showing = !this.showing;
-
 		this.render();
-
 	}
 
 });

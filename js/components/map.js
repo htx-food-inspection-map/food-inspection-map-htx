@@ -18,6 +18,7 @@ var MapComponent = Backbone.View.extend({
 		var view = this;
 
 		return function (mapEvent) {
+			console.log(vendorData)
 			view.trigger('select:vendor', vendorData.id);
 		}
 	},

@@ -39,7 +39,13 @@ var HomeView = Backbone.View.extend({
 	},
 
 	_showVendor: function(vendorId) {
-		this._sidebar.render(this._getSidebarData(vendorId));
+		var activeVendor = _.findWhere(this.collection.models, {id: vendorId})
+		if (!activeVendor._fetched) activeVendor._fetch(vendorId).then(function() {
+			activeVendor._fetched = true;
+			console.log(activeVendor.attributes)
+			this._sidebar.render(activeVendor.attributes);
+		}.bind(this))
+		else this._sidebar.render(activeVendor.attributes);
 	},
 
 	_getMapData: function() {
@@ -48,16 +54,6 @@ var HomeView = Backbone.View.extend({
 			return newVal;
 		});
 	},
-
-	_getSidebarData: function(vendorId) {
-		var activeVendor = _.findWhere(this.collection.models, {id: vendorId})
-		if(activeVendor){
-			if (!activeVendor._fetched) activeVendor._fetch(vendorId)
-			return activeVendor.attributes;
-		} else {
-			return {};
-		}
-	}
 });
 
 module.exports = HomeView;

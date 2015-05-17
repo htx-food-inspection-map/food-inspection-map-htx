@@ -12,7 +12,6 @@ function app() {
 
 	home.collection.fetch().then(function() {
 		home.render();
-		// home.collection._fetch();
 	});
 }
 },{"./collections/vendor.js":2,"./pages/home.js":12}],2:[function(require,module,exports){
@@ -72,6 +71,7 @@ var MapComponent = Backbone.View.extend({
 		var view = this;
 
 		return function (mapEvent) {
+			console.log(vendorData)
 			view.trigger('select:vendor', vendorData.id);
 		}
 	},
@@ -110,7 +110,7 @@ var SidebarComponent = Backbone.View.extend({
 
 	initialize: function() {
 		this.showing = false;
-		this.vendor = {};
+		this.vendor = {}
 	},
 
 	getProps: function() {
@@ -131,18 +131,14 @@ var SidebarComponent = Backbone.View.extend({
 		return props;
 	},
 
-	update: function(data) {
-		if(!_.isEmpty(data)){
-			this.showing = true;
-			this.vendor = _.clone(data);
-		}
-	},
-
 	render: function(data) {
-		this.update(data);
-		this.el.innerHTML = this.template({props: this.getProps(), vendor: this.vendor});
-
+		if (!_.isEmpty(data)) {
+			this.vendor = _.clone(data)
+		}
+		if (_.isEmpty(this.vendor)) return;
+		else this.showing = true;
 		this.el.className = 'container ' + this.getProps().className;
+		this.el.innerHTML = this.template({props: this.getProps(), vendor: this.vendor});
 	},
 
 	events: {
@@ -150,11 +146,8 @@ var SidebarComponent = Backbone.View.extend({
 	},
 
 	slideSidebar: function() {
-
 		this.showing = !this.showing;
-
 		this.render();
-
 	}
 
 });
@@ -191,6 +184,10 @@ var Backbone = require('backbone');
 
 var VendorModel = Backbone.Model.extend({
 
+	initialize: function() {
+		this._fetched = false;
+	},
+
 	parse: function(data) {
 		for (var key in data) {
 			if (data[key] === '0' || data[key] === '1') {
@@ -201,10 +198,10 @@ var VendorModel = Backbone.Model.extend({
 		return data;
 	},
 
-	_fetch: function(id) {
-		$.get('/accounts/' + id).then(function(data) {
-			console.log(data)
-		})
+	_fetch: function() {
+		return $.get('/accounts/' + this.get('id')).then(function(data) {
+			this.set(data);
+		}.bind(this));
 	}
 });
 
@@ -251,7 +248,13 @@ var HomeView = Backbone.View.extend({
 	},
 
 	_showVendor: function(vendorId) {
-		this._sidebar.render(this._getSidebarData(vendorId));
+		var activeVendor = _.findWhere(this.collection.models, {id: vendorId})
+		if (!activeVendor._fetched) activeVendor._fetch(vendorId).then(function() {
+			activeVendor._fetched = true;
+			console.log(activeVendor.attributes)
+			this._sidebar.render(activeVendor.attributes);
+		}.bind(this))
+		else this._sidebar.render(activeVendor.attributes);
 	},
 
 	_getMapData: function() {
@@ -260,21 +263,11 @@ var HomeView = Backbone.View.extend({
 			return newVal;
 		});
 	},
-
-	_getSidebarData: function(vendorId) {
-		var activeVendor = _.findWhere(this.collection.models, {id: vendorId})
-		if(activeVendor){
-			if (!activeVendor._fetched) activeVendor._fetch(vendorId)
-			return activeVendor.attributes;
-		} else {
-			return {};
-		}
-	}
 });
 
 module.exports = HomeView;
 },{"../components/filter":3,"../components/map":5,"../components/sidebar.js":6,"../components/sort":7,"./templates/home.html":13,"backbone":14,"leaflet":17,"lodash":18}],13:[function(require,module,exports){
-module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n\t<div id=\"searchbar\">\n\t\t<div class=\"form-group\">\n\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"find a restaurant\">\n\t\t</div>\n\t</div>\n\t<div id=\"controls\">\n\t\t<div id=\"sort\"></div>\n\t\t<div id=\"filter\"></div>\n\t</div>\n</div>\n<div id=\"sidebar\" class=\"container\"></div>\n";
+module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n\t<div id=\"searchbar\">\n\t\t<div class=\"form-group\">\n\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"find a restaurant\">\n\t\t</div>\n\t</div>\n\t<div id=\"controls\">\n\t\t<div id=\"sort\"></div>\n\t\t<div id=\"filter\"></div>\n\t</div>\n</div>\n<div id=\"sidebar\" class=\"container close-sidebar\"></div>\n";
 
 },{}],14:[function(require,module,exports){
 (function (global){
