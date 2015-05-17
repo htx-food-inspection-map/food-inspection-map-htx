@@ -18,6 +18,10 @@ body, html, #app, #main-container, #map, #map-container {
 	transition: right 0.5s;
 }
 
+#sidebar.close-sidebar {
+	right: -30%;
+}
+
 #searchbar {
 	position: absolute;
 	top: $margin-buffer;

@@ -13,6 +13,14 @@ var MapComponent = Backbone.View.extend({
 		this._data = data;
 	},
 
+	triggerVendorEvent: function(vendorData) {
+		var view = this;
+
+		return function (mapEvent) {
+			view.trigger('select:vender', vendorData.id);
+		}
+	},
+
 	render: function() {
 		L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/maptile/{mapID}/normal.day/{z}/{x}/{y}/256/png8?app_id={app_id}&app_code={app_code}', {
 			attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
@@ -27,7 +35,8 @@ var MapComponent = Backbone.View.extend({
 		// algorithm for paring down
 
 		_.forEach(this._data.slice(0, 100), function(val) {
-			var marker = L.marker([val.lat, val.lng]).addTo(this._map)
+			var vendor = L.marker([val.lat, val.lng]).addTo(this._map);
+			vendor.on('click', this.triggerVendorEvent(val));
 		}.bind(this))
 	},
 
