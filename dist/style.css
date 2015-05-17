@@ -6262,6 +6262,8 @@ body, html, #app, #main-container, #map, #map-container {
   top: 20px;
   left: 60px;
   width: 25%; }
+  #searchbar form {
+    outline: none; }
 
 #controls {
   position: absolute;

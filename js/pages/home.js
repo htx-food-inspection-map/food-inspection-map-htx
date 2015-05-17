@@ -24,12 +24,6 @@ var HomeView = Backbone.View.extend({
 		this._map = new MapComponent(this._getMapData());
 		this._map.render();
 
-		this._sort = new SortComponent(this._sortData);
-		this._sort.render();
-
-		this._filter = new FilterComponent(this._filterData);
-		this._filter.render();
-
 		this._sidebar = new SidebarComponent();
 		this._sidebar.render();
 
@@ -41,15 +35,15 @@ var HomeView = Backbone.View.extend({
 	_showVendor: function(vendorId) {
 		var activeVendor = _.findWhere(this.collection.models, {id: vendorId})
 		if (!activeVendor._fetched) activeVendor._fetch(vendorId).then(function() {
-			activeVendor._fetched = true;
-			console.log(activeVendor.attributes)
+			activeVendor.set('_fetched', true);
 			this._sidebar.render(activeVendor.attributes);
 		}.bind(this))
 		else this._sidebar.render(activeVendor.attributes);
 	},
 
-	_getMapData: function() {
-		return _.map(this.collection.models, function(val) {
+	_getMapData: function(data) {
+		if (!data) data = this.collection.models;
+		return _.map(data, function(val) {
 			var newVal = _.pick(val.attributes, ['lat', 'lng', 'bugs', 'rats', 'score', 'slime', 'status', 'id']);
 			return newVal;
 		});

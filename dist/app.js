@@ -63,20 +63,11 @@ var MapComponent = Backbone.View.extend({
 	el: "#map",
 
 	initialize: function(data) {
-		this._map = L.map(this.el).setView([29.762778, -95.383056], 11);
 		this._data = data;
-	},
+		this._markers = {};
 
-	triggerVendorEvent: function(vendorData) {
-		var view = this;
+		this._map = L.map(this.el).setView([29.762778, -95.383056], 11);
 
-		return function (mapEvent) {
-			console.log(vendorData)
-			view.trigger('select:vendor', vendorData.id);
-		}
-	},
-
-	render: function() {
 		L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/maptile/{mapID}/normal.day/{z}/{x}/{y}/256/png8?app_id={app_id}&app_code={app_code}', {
 			attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
 			subdomains: '1234',
@@ -86,12 +77,21 @@ var MapComponent = Backbone.View.extend({
 			base: 'base',
 			maxZoom: 20
 		}).addTo(this._map);
+	},
 
-		// algorithm for paring down
+	triggerVendorEvent: function(vendorData) {
+		var view = this;
 
+		return function (mapEvent) {
+			view.trigger('select:vendor', vendorData.id);
+		}
+	},
+
+	render: function() {
 		_.forEach(this._data.slice(0, 100), function(val) {
 			var vendor = L.marker([val.lat, val.lng], {icon: hoverIcon}).addTo(this._map);
 			vendor.on('click', this.triggerVendorEvent(val));
+			this._markers[val.id] = vendor;
 		}.bind(this))
 
 	}
@@ -133,7 +133,7 @@ var SidebarComponent = Backbone.View.extend({
 
 	render: function(data) {
 		if (!_.isEmpty(data)) {
-			this.vendor = _.clone(data)
+			this.vendor = data;
 			this.showing = true;
 		}
 		if (_.isEmpty(this.vendor)) return;
@@ -173,7 +173,7 @@ module.exports = SortComponent;
 module.exports = "<span>Filter me</span>";
 
 },{}],9:[function(require,module,exports){
-module.exports = "<button id=\"toggle-sidebar\" class=\"btn btn-primary\">\n\t<%=props.label%>\n</button>\n<div class=\"row\">\n\t<div class=\"col-xs-12\">\n\t\t<h2><%=vendor.name%></h2>\n\t</div>\n</div>";
+module.exports = "<button id=\"toggle-sidebar\" class=\"btn btn-primary\">\n\t<%=props.label%>\n</button>\n<div class=\"row\">\n\t<% console.log(vendor) %>\n\t<div class=\"col-xs-12\">\n\t\t<h2><%=vendor.name%></h2>\n\t\t<% if (vendor.bugs) { %>\n\t\t\tbugs\n\t\t<% } %>\n\t\t<% if (vendor.rats) { %>\n\t\t\trats\n\t\t<% } %>\n\t\t<% if (vendor.slime) { %>\n\t\t\tslime\n\t\t<% } %>\n\t</div>\n</div>";
 
 },{}],10:[function(require,module,exports){
 module.exports = "<span>Sort me</span>";
@@ -233,12 +233,6 @@ var HomeView = Backbone.View.extend({
 		this._map = new MapComponent(this._getMapData());
 		this._map.render();
 
-		this._sort = new SortComponent(this._sortData);
-		this._sort.render();
-
-		this._filter = new FilterComponent(this._filterData);
-		this._filter.render();
-
 		this._sidebar = new SidebarComponent();
 		this._sidebar.render();
 
@@ -250,15 +244,15 @@ var HomeView = Backbone.View.extend({
 	_showVendor: function(vendorId) {
 		var activeVendor = _.findWhere(this.collection.models, {id: vendorId})
 		if (!activeVendor._fetched) activeVendor._fetch(vendorId).then(function() {
-			activeVendor._fetched = true;
-			console.log(activeVendor.attributes)
+			activeVendor.set('_fetched', true);
 			this._sidebar.render(activeVendor.attributes);
 		}.bind(this))
 		else this._sidebar.render(activeVendor.attributes);
 	},
 
-	_getMapData: function() {
-		return _.map(this.collection.models, function(val) {
+	_getMapData: function(data) {
+		if (!data) data = this.collection.models;
+		return _.map(data, function(val) {
 			var newVal = _.pick(val.attributes, ['lat', 'lng', 'bugs', 'rats', 'score', 'slime', 'status', 'id']);
 			return newVal;
 		});
@@ -267,7 +261,7 @@ var HomeView = Backbone.View.extend({
 
 module.exports = HomeView;
 },{"../components/filter":3,"../components/map":5,"../components/sidebar.js":6,"../components/sort":7,"./templates/home.html":13,"backbone":14,"leaflet":17,"lodash":18}],13:[function(require,module,exports){
-module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n\t<div id=\"searchbar\">\n\t\t<div class=\"form-group\">\n\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"find a restaurant\">\n\t\t</div>\n\t</div>\n\t<div id=\"controls\">\n\t\t<div id=\"sort\"></div>\n\t\t<div id=\"filter\"></div>\n\t</div>\n</div>\n<div id=\"sidebar\" class=\"container close-sidebar\"></div>\n";
+module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n<!-- \t<div id=\"searchbar\">\n\t\t<form class=\"form-group\">\n\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"find a restaurant\">\n\t\t</form>\n\t</div> -->\n\t<div id=\"controls\">\n\t\t<div id=\"sort\"></div>\n\t\t<div id=\"filter\"></div>\n\t</div>\n</div>\n<div id=\"sidebar\" class=\"container close-sidebar\"></div>\n";
 
 },{}],14:[function(require,module,exports){
 (function (global){

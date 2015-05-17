@@ -32,7 +32,7 @@ var SidebarComponent = Backbone.View.extend({
 
 	render: function(data) {
 		if (!_.isEmpty(data)) {
-			this.vendor = _.clone(data)
+			this.vendor = data;
 			this.showing = true;
 		}
 		if (_.isEmpty(this.vendor)) return;

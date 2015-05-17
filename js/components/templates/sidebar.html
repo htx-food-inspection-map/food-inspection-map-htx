@@ -2,7 +2,17 @@
 	<%=props.label%>
 </button>
 <div class="row">
+	<% console.log(vendor) %>
 	<div class="col-xs-12">
 		<h2><%=vendor.name%></h2>
+		<% if (vendor.bugs) { %>
+			bugs
+		<% } %>
+		<% if (vendor.rats) { %>
+			rats
+		<% } %>
+		<% if (vendor.slime) { %>
+			slime
+		<% } %>
 	</div>
 </div>
