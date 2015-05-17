@@ -8,11 +8,40 @@ var SidebarComponent = Backbone.View.extend({
 	template: _.template(require('./templates/sidebar.html')),
 
 	initialize: function() {
-		this.showing = true;
+		this.showing = false;
+		this.vendor = {};
+	},
+
+	getProps: function() {
+		var props;
+
+		if(this.showing){
+			props = {
+				className: 'open-sidebar',
+				label: 'Hide'
+			};
+		} else {
+			props = {
+				className: 'close-sidebar',
+				label: 'Show'
+			};
+		}
+
+		return props;
+	},
+
+	update: function(data) {
+		if(!_.isEmpty(data)){
+			this.showing = true;
+			this.vendor = _.clone(data);
+		}
 	},
 
 	render: function(data) {
-		this.el.innerHTML = this.template(data);
+		this.update(data);
+		this.el.innerHTML = this.template({props: this.getProps(), vendor: this.vendor});
+
+		this.el.className = 'container ' + this.getProps().className;
 	},
 
 	events: {
@@ -22,15 +51,8 @@ var SidebarComponent = Backbone.View.extend({
 	slideSidebar: function() {
 
 		this.showing = !this.showing;
-		console.log(this.$el.outerWidth())
-		if(this.showing){
-			this.$el.css("right", 0);
-			this.$el.find("#toggle-sidebar").html("HIDE");
-		}
-		else{
-			this.$el.css("right", -1 * this.$el.outerWidth());
-			this.$el.find("#toggle-sidebar").html("SHOW");
-		}
+
+		this.render();
 
 	}
 
