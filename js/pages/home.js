@@ -14,37 +14,28 @@ var HomeView = Backbone.View.extend({
 
 	template: _.template(require('./templates/home.html')),
 
-	initialize: function() {
-		this.collection.fetch()
-		this.mapData = this._getMapData()
-		this.sidebarData = this._getSidebarData()
-	},
-
 	render: function(data) {
 		this.el.innerHTML = this.template(data);
 
-		this.map = new MapComponent(this.mapData);
-		this.map.render();
+		this._map = new MapComponent(this._getMapData());
+		this._map.render();
 
-		this.sortBox = new SortComponent(this.sortData);
-		this.sortBox.render();
+		this._sort = new SortComponent(this._sortData);
+		this._sort.render();
 
-		this.filterBox = new FilterComponent(this.filterData);
-		this.filterBox.render();
+		this._filter = new FilterComponent(this._filterData);
+		this._filter.render();
 
-		this.sidebar = new SidebarComponent(this.sidebarData);
-		this.sidebar.render();
-	},
-
-	handleFilter: function() {
-		// change collection
-
-		this.map.render();
+		this._getSidebarData();
+		this._sidebar = new SidebarComponent(this._sidebarData);
+		this._sidebar.render();
 	},
 
 	_getMapData: function() {
-		console.log(this.collection);
-		return {};
+		return _.map(this.collection.models, function(val) {
+			var newVal = _.pick(val.attributes, ['lat', 'lng', 'bugs', 'rats', 'score', 'slime', 'status']);
+			return newVal;
+		});
 	},
 
 	_getSidebarData: function() {

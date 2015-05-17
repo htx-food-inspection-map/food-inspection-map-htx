@@ -8,18 +8,7 @@ var VendorCollection = Backbone.Collection.extend({
 
 	model: VendorModel,
 
-	fetch: function() {
-		var x = $.Deferred()
-		setTimeout(function() {
-			x.resolve(require('../../meta_w_flags.json'));
-		}, 1000)
-		return x;
-	},
-
-	parse: function(data) {
-		console.log(data)
-		return data;
-	}
+	url: './meta.json'
 });
 
 module.exports = VendorCollection;
