@@ -70,7 +70,8 @@ body, html, #app, #main-container, #map, #map-container {
 		z-index: 999;
 		background-color: #FFF;
 		display: none;
-		transform: translate(-32%, -210%);
+		top: -80px;
+		left: -40px;
 		text-align: justify;
 		border-radius: 4px;
 		color: #333;
@@ -81,7 +82,7 @@ body, html, #app, #main-container, #map, #map-container {
 			position: relative;
 			margin: 0;
 			padding: 0;
-			width: 80px;
+			width: 100px;
 			text-align: center;
 		}
 

@@ -6293,9 +6293,8 @@ body, html, #app, #main-container, #map, #map-container {
   z-index: 999;
   background-color: #FFF;
   display: none;
-  -webkit-transform: translate(-32%, -210%);
-      -ms-transform: translate(-32%, -210%);
-          transform: translate(-32%, -210%);
+  top: -80px;
+  left: -40px;
   text-align: justify;
   border-radius: 4px;
   color: #333;
@@ -6305,7 +6304,7 @@ body, html, #app, #main-container, #map, #map-container {
     position: relative;
     margin: 0;
     padding: 0;
-    width: 80px;
+    width: 100px;
     text-align: center; }
   .div-marker .hoverIcons li {
     display: inline-block;
@@ -6364,3 +6363,22 @@ body, html, #app, #main-container, #map, #map-container {
 
 .div-marker .icon-marker:hover ~ .hoverIcons, .div-marker .pin:hover ~ .hoverIcons, .div-marker .pin.active ~ .hoverIcons {
   display: block; }
+
+img.vendor-status {
+  width: 40px; }
+
+img.vendor-status-small {
+  width: 30px; }
+
+.violation-comment {
+  margin-left: 40px;
+  margin-bottom: 10px;
+  color: #6D6D6D;
+  background: #FFFCC5;
+  padding: 14px;
+  border-radius: 3px;
+  border: 1px solid #DDD; }
+
+.inspection-title {
+  display: inline;
+  font-weight: bold; }
