@@ -18,7 +18,12 @@ var MapComponent = Backbone.View.extend({
 		var view = this;
 
 		return function (mapEvent) {
-			console.log(vendorData)
+			var active = view.el.querySelector('.active');
+			if(active){
+				active.classList.remove('active');				
+			}
+
+			this._icon.childNodes[0].classList.add('active');
 			view.trigger('select:vendor', vendorData.id);
 		}
 	},

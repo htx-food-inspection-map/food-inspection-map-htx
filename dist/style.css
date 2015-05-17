@@ -6279,9 +6279,9 @@ body, html, #app, #main-container, #map, #map-container {
   z-index: 999;
   background-color: #FFF;
   display: none;
-  -webkit-transform: translate(-32%, -180%);
-      -ms-transform: translate(-32%, -180%);
-          transform: translate(-32%, -180%);
+  -webkit-transform: translate(-32%, -210%);
+      -ms-transform: translate(-32%, -210%);
+          transform: translate(-32%, -210%);
   text-align: justify;
   border-radius: 4px;
   color: #333;
@@ -6323,13 +6323,28 @@ body, html, #app, #main-container, #map, #map-container {
     position: absolute;
     border-radius: 50%; }
   .div-marker .pin.FAIL {
-    background: #DD0F0F; }
+    background: rgba(221, 15, 15, 0.75); }
+    .div-marker .pin.FAIL:after {
+      background: #dd0f0f; }
   .div-marker .pin.PASS {
-    background: #2DB03E; }
+    background: rgba(45, 176, 62, 0.6); }
+    .div-marker .pin.PASS:after {
+      background: #2db03e; }
 
 .div-marker .icon-marker {
   position: relative;
   z-index: 1000; }
+  .div-marker .icon-marker:hover.pin, .div-marker .icon-marker.active.pin {
+    width: 40px;
+    height: 40px;
+    margin: -13px 0 0 -12px; }
+    .div-marker .icon-marker:hover.pin:after, .div-marker .icon-marker.active.pin:after {
+      width: 20px;
+      height: 20px; }
+    .div-marker .icon-marker:hover.pin.FAIL, .div-marker .icon-marker.active.pin.FAIL {
+      background: #dd0f0f; }
+    .div-marker .icon-marker:hover.pin.PASS, .div-marker .icon-marker.active.pin.PASS {
+      background: #2db03e; }
 
-.div-marker .icon-marker:hover ~ .hoverIcons, .div-marker .pin:hover ~ .hoverIcons {
+.div-marker .icon-marker:hover ~ .hoverIcons, .div-marker .pin:hover ~ .hoverIcons, .div-marker .pin.active ~ .hoverIcons {
   display: block; }

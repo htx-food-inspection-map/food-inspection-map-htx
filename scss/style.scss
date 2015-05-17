@@ -50,7 +50,7 @@ body, html, #app, #main-container, #map, #map-container {
 		z-index: 999;
 		background-color: #FFF;
 		display: none;
-		transform: translate(-32%, -180%);
+		transform: translate(-32%, -210%);
 		text-align: justify;
 		border-radius: 4px;
 		color: #333;
@@ -98,20 +98,46 @@ body, html, #app, #main-container, #map, #map-container {
 		}
 
 		&.FAIL {
-			background: #DD0F0F;
+			background: rgba(221, 15, 15, 0.75);
+			&:after {
+				background: rgba(221, 15, 15, 1);
+			}
 		}
 		&.PASS {
-			background: #2DB03E;
+			background: rgba(45, 176, 62, 0.6);
+			&:after {
+				background: rgba(45, 176, 62, 1);
+			}
 		}
 	}
 
 	.icon-marker {
 		position: relative;
 		z-index: 1000;
+
+		&:hover, &.active {
+			&.pin {
+				width: 40px;
+  				height: 40px;
+  				margin: -13px 0 0 -12px;
+
+				&:after {
+					width: 20px;
+ 					height: 20px;
+				}
+				&.FAIL {
+					background: rgba(221, 15, 15, 1);
+				}
+				&.PASS {
+					background: rgba(45, 176, 62, 1);
+				}
+			}
+		}
 	}
 
-	.icon-marker:hover ~ .hoverIcons, .pin:hover ~ .hoverIcons {
+	.icon-marker:hover ~ .hoverIcons, .pin:hover ~ .hoverIcons, .pin.active ~ .hoverIcons {
 		display: block;
+
 	}
 }
 
