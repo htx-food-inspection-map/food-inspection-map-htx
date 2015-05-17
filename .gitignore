@@ -1,6 +1,3 @@
 node_modules
 .DS_Store
-meta.csv
-./meta.json
-meta_w_flags.csv
 mongoConfig.js
