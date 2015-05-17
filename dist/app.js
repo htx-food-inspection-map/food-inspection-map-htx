@@ -61,8 +61,20 @@ var MapComponent = Backbone.View.extend({
 	el: "#map",
 
 	initialize: function(data) {
-		this._map = L.map(this.el).setView([29.762778, -95.383056], 11);
 		this._data = data;
+		this._markers = {};
+
+		this._map = L.map(this.el).setView([29.762778, -95.383056], 11);
+
+		L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/maptile/{mapID}/normal.day/{z}/{x}/{y}/256/png8?app_id={app_id}&app_code={app_code}', {
+			attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
+			subdomains: '1234',
+			mapID: 'newest',
+			app_id: 'Y8m9dK2brESDPGJPdrvs',
+			app_code: 'dq2MYIvjAotR8tHvY8Q_Dg',
+			base: 'base',
+			maxZoom: 20
+		}).addTo(this._map);
 	},
 
 	triggerVendorEvent: function(vendorData) {
@@ -80,27 +92,17 @@ var MapComponent = Backbone.View.extend({
 	},
 
 	render: function() {
-		L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/maptile/{mapID}/normal.day/{z}/{x}/{y}/256/png8?app_id={app_id}&app_code={app_code}', {
-			attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
-			subdomains: '1234',
-			mapID: 'newest',
-			app_id: 'Y8m9dK2brESDPGJPdrvs',
-			app_code: 'dq2MYIvjAotR8tHvY8Q_Dg',
-			base: 'base',
-			maxZoom: 20
-		}).addTo(this._map);
-
-		// algorithm for paring down
-
 		_.forEach(this._data.slice(0, 100), function(val) {
+
 			var badgeData = _.pick(val, 'rats', 'bugs', 'slime');
 			var grade = grades[val.score + 1];
 
-			var hoverIcon = L.divIcon({className: 'div-marker', html: hoverIconTemplate({badges: badgeData, grade: grade, status: val.status})})
+			var hoverIcon = L.divIcon({className: 'div-marker', html: hoverIconTemplate({badges: badgeData, grade: grade, status: val.status, name: val.name})})
 
 			var vendor = L.marker([val.lat, val.lng], {icon: hoverIcon}).addTo(this._map);
 
 			vendor.on('click', this.triggerVendorEvent(val));
+			this._markers[val.id] = vendor;
 		}.bind(this))
 
 	}
@@ -142,7 +144,7 @@ var SidebarComponent = Backbone.View.extend({
 
 	render: function(data) {
 		if (!_.isEmpty(data)) {
-			this.vendor = _.clone(data)
+			this.vendor = data;
 			this.showing = true;
 		}
 		if (_.isEmpty(this.vendor)) return;
@@ -183,10 +185,10 @@ module.exports = SortComponent;
 module.exports = "<span>Filter me</span>";
 
 },{}],8:[function(require,module,exports){
-module.exports = "<div class=\"pin leaflet-marker-icon leaflet-zoom-animated leaflet-clickable icon-marker <%=status%>\"></div>\n<img src=\"img/leaflet/marker-shadow.png\" class=\"leaflet-marker-shadow leaflet-zoom-animated\">\n<div class=\"hoverIcons\">\n\t<ul>\n\t<% _.each(badges, function(bool, badge){ \n\t\tif (bool) {%>\n\t\t<li>\n\t\t\t<img src=\"./img/badges/<%=badge%>.png\">\n\t\t</li>\n\t<% \t}\n\t});%>\n\t\t<li><%=grade%></li>\n\t</ul>\n</div>";
+module.exports = "<div class=\"pin leaflet-marker-icon leaflet-zoom-animated leaflet-clickable icon-marker <%=status%>\"></div>\n<img src=\"img/leaflet/marker-shadow.png\" class=\"leaflet-marker-shadow leaflet-zoom-animated\">\n<div class=\"hoverIcons\">\n\t<ul>\n\t<% _.each(badges, function(bool, badge){\n\t\tif (bool) {%>\n\t\t<li>\n\t\t\t<img src=\"./img/badges/<%=badge%>.png\">\n\t\t</li>\n\t<% \t}\n\t});%>\n\t\t<li><%=grade%></li>\n\t\t<li class=\"hover-name\"><%= name %></li>\n\t</ul>\n</div>";
 
 },{}],9:[function(require,module,exports){
-module.exports = "<button id=\"toggle-sidebar\" class=\"btn btn-primary\">\n\t<%=props.label%>\n</button>\n<div class=\"row\">\n\t<div class=\"col-xs-12\">\n    <h2><%=vendor.status%> : <%=vendor.name%></h2>\n    <div id=\"vendor-violations\">\n      <% if (vendor.bugs) { %> bugs <% } %>\n      <% if (vendor.slime) { %> slime <% } %>\n      <% if (vendor.rats) { %> rats <% } %>\n      <% if (vendor.condemned) { %> condemend <% } %>\n    </div>\n    <div id=\"vendor-inspections\">\n      <% _.forEach(vendor.inspections, function(insp) { %>\n      <div id=\"vendor-inspection\">\n        <%= insp.status %> on <%= insp.date %>\n        <div id=\"vendor-violations\">\n          <% _.forEach(insp.violations, function(viol) { %>\n            <div class=\"violation-weight\">\n              weight: <%= viol.weight %>\n            </div>\n            <div class=\"violation-comment\">\n              <%= viol.comments %>\n            </div>\n          <% }); %>\n        </div>\n      <% }); %>\n      </div>\n    </div>\n\t</div>\n</div>\n";
+module.exports = "<button id=\"toggle-sidebar\" class=\"btn btn-primary\">\n\t<%=props.label%>\n</button>\n<div class=\"row\">\n\t<% console.log(vendor) %>\n\t<div class=\"col-xs-12\">\n    <h2><%=vendor.status%> : <%=vendor.name%></h2>\n    <div id=\"vendor-violations\">\n      <% if (vendor.bugs) { %> bugs <% } %>\n      <% if (vendor.slime) { %> slime <% } %>\n      <% if (vendor.rats) { %> rats <% } %>\n      <% if (vendor.condemned) { %> condemend <% } %>\n    </div>\n    <div id=\"vendor-inspections\">\n      <% _.forEach(vendor.inspections, function(insp) { %>\n      <div id=\"vendor-inspection\">\n        <%= insp.status %> on <%= insp.date %>\n        <div id=\"vendor-violations\">\n          <% _.forEach(insp.violations, function(viol) { %>\n            <div class=\"violation-weight\">\n              weight: <%= viol.weight %>\n            </div>\n            <div class=\"violation-comment\">\n              <%= viol.comments %>\n            </div>\n          <% }); %>\n        </div>\n      <% }); %>\n      </div>\n    </div>\n\t</div>\n</div>\n";
 
 },{}],10:[function(require,module,exports){
 module.exports = "<span>Sort me</span>";
@@ -245,12 +247,6 @@ var HomeView = Backbone.View.extend({
 		this._map = new MapComponent(this._getMapData());
 		this._map.render();
 
-		this._sort = new SortComponent(this._sortData);
-		this._sort.render();
-
-		this._filter = new FilterComponent(this._filterData);
-		this._filter.render();
-
 		this._sidebar = new SidebarComponent();
 		this._sidebar.render();
 
@@ -262,16 +258,16 @@ var HomeView = Backbone.View.extend({
 	_showVendor: function(vendorId) {
 		var activeVendor = _.findWhere(this.collection.models, {id: vendorId})
 		if (!activeVendor._fetched) activeVendor._fetch(vendorId).then(function() {
-			activeVendor._fetched = true;
-			console.log(activeVendor.attributes)
+			activeVendor.set('_fetched', true);
 			this._sidebar.render(activeVendor.attributes);
 		}.bind(this))
 		else this._sidebar.render(activeVendor.attributes);
 	},
 
-	_getMapData: function() {
-		return _.map(this.collection.models, function(val) {
-			var newVal = _.pick(val.attributes, ['lat', 'lng', 'bugs', 'rats', 'score', 'slime', 'status', 'id']);
+	_getMapData: function(data) {
+		if (!data) data = this.collection.models;
+		return _.map(data, function(val) {
+			var newVal = _.pick(val.attributes, ['lat', 'lng', 'bugs', 'rats', 'score', 'slime', 'status', 'id', 'name']);
 			return newVal;
 		});
 	},
@@ -279,7 +275,7 @@ var HomeView = Backbone.View.extend({
 
 module.exports = HomeView;
 },{"../components/filter":3,"../components/map":4,"../components/sidebar.js":5,"../components/sort":6,"./templates/home.html":13,"backbone":14,"leaflet":17,"lodash":18}],13:[function(require,module,exports){
-module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n\t<div id=\"searchbar\">\n\t\t<div class=\"form-group\">\n\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"find a restaurant\">\n\t\t</div>\n\t</div>\n\t<div id=\"controls\">\n\t\t<div id=\"sort\"></div>\n\t\t<div id=\"filter\"></div>\n\t</div>\n</div>\n<div id=\"sidebar\" class=\"container close-sidebar\"></div>\n";
+module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n<!-- \t<div id=\"searchbar\">\n\t\t<form class=\"form-group\">\n\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"find a restaurant\">\n\t\t</form>\n\t</div> -->\n\t<div id=\"controls\">\n\t\t<img src=\"./img/buggg.png\">\n\t\t<h3>Food<br>Inspection<br>Map<br><i>HTX</i></h3>\n\t</div>\n</div>\n<div id=\"sidebar\" class=\"container close-sidebar\"></div>\n";
 
 },{}],14:[function(require,module,exports){
 (function (global){
