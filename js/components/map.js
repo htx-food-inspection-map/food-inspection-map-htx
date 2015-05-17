@@ -38,6 +38,10 @@ var MapComponent = Backbone.View.extend({
 			var vendor = L.marker([val.lat, val.lng]).addTo(this._map);
 			vendor.on('click', this.triggerVendorEvent(val));
 		}.bind(this))
+	},
+
+	_hoverDetail: function(e) {
+
 	}
 })
 

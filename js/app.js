@@ -1,3 +1,5 @@
+'use strict'
+
 var HomeView = require('./pages/home.js');
 var VendorCollection = require('./collections/vendor.js');
 

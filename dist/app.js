@@ -1,4 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict'
+
 var HomeView = require('./pages/home.js');
 var VendorCollection = require('./collections/vendor.js');
 
@@ -11,7 +13,6 @@ function app() {
 	home.collection.fetch().then(home.render.bind(home));
 }
 },{"./collections/vendor.js":2,"./pages/home.js":11}],2:[function(require,module,exports){
-var _ = require('lodash');
 var $ = require('jquery');
 var Backbone = require('backbone');
 
@@ -21,11 +22,15 @@ var VendorCollection = Backbone.Collection.extend({
 
 	model: VendorModel,
 
-	url: './meta.json'
+	url: './meta.json',
+
+	_fetch: function() {
+		// get additional data
+	}
 });
 
 module.exports = VendorCollection;
-},{"../models/vendor":10,"backbone":13,"jquery":15,"lodash":17}],3:[function(require,module,exports){
+},{"../models/vendor":10,"backbone":13,"jquery":15}],3:[function(require,module,exports){
 var _ = require('lodash');
 var Backbone = require('backbone');
 
@@ -82,6 +87,10 @@ var MapComponent = Backbone.View.extend({
 			var vendor = L.marker([val.lat, val.lng]).addTo(this._map);
 			vendor.on('click', this.triggerVendorEvent(val));
 		}.bind(this))
+	},
+
+	_hoverDetail: function(e) {
+
 	}
 })
 
