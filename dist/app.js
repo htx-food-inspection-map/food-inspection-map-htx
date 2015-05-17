@@ -134,9 +134,9 @@ var SidebarComponent = Backbone.View.extend({
 	render: function(data) {
 		if (!_.isEmpty(data)) {
 			this.vendor = _.clone(data)
+			this.showing = true;
 		}
 		if (_.isEmpty(this.vendor)) return;
-		else this.showing = true;
 		this.el.className = 'container ' + this.getProps().className;
 		this.el.innerHTML = this.template({props: this.getProps(), vendor: this.vendor});
 	},
