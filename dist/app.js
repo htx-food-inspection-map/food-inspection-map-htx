@@ -48,15 +48,13 @@ var FilterComponent = Backbone.View.extend({
 });
 
 module.exports = FilterComponent;
-},{"./templates/filter.html":8,"backbone":14,"lodash":18}],4:[function(require,module,exports){
-module.exports = '<img src="img/leaflet/marker-icon.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable icon-marker"><img src="img/leaflet/marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated"><div class="hoverIcons"><img src="./img/nastyIconPlaceholder.png" class="rodent-icon"><img src="./img/nastyIconPlaceholder.png" class="slime-icon"><img src="./img/nastyIconPlaceholder.png" class="bug-icon"></div>'
-},{}],5:[function(require,module,exports){
+},{"./templates/filter.html":7,"backbone":14,"lodash":18}],4:[function(require,module,exports){
 var _ = require('lodash')
 var Backbone = require('backbone')
 var L = require('leaflet');
 
-var hoverIconHtml = require('./hoverIcons')
-var hoverIcon = L.divIcon({className: 'div-marker', html: hoverIconHtml})
+var hoverIconTemplate = _.template(require('./templates/hoverIcon.html'));
+var grades = ['A','B','C','D','F'];
 
 var MapComponent = Backbone.View.extend({
 
@@ -90,7 +88,13 @@ var MapComponent = Backbone.View.extend({
 		// algorithm for paring down
 
 		_.forEach(this._data.slice(0, 100), function(val) {
+			var badgeData = _.pick(val, 'rats', 'bugs', 'slime');
+			var grade = grades[val.score + 1];
+
+			var hoverIcon = L.divIcon({className: 'div-marker', html: hoverIconTemplate({badges: badgeData, grade: grade, status: val.status})})
+
 			var vendor = L.marker([val.lat, val.lng], {icon: hoverIcon}).addTo(this._map);
+
 			vendor.on('click', this.triggerVendorEvent(val));
 		}.bind(this))
 
@@ -98,7 +102,7 @@ var MapComponent = Backbone.View.extend({
 })
 
 module.exports = MapComponent;
-},{"./hoverIcons":4,"backbone":14,"leaflet":17,"lodash":18}],6:[function(require,module,exports){
+},{"./templates/hoverIcon.html":8,"backbone":14,"leaflet":17,"lodash":18}],5:[function(require,module,exports){
 var _ = require('lodash');
 var Backbone = require('backbone');
 
@@ -154,7 +158,7 @@ var SidebarComponent = Backbone.View.extend({
 
 module.exports = SidebarComponent;
 
-},{"./templates/sidebar.html":9,"backbone":14,"lodash":18}],7:[function(require,module,exports){
+},{"./templates/sidebar.html":9,"backbone":14,"lodash":18}],6:[function(require,module,exports){
 var _ = require('lodash');
 var Backbone = require('backbone');
 
@@ -170,8 +174,11 @@ var SortComponent = Backbone.View.extend({
 });
 
 module.exports = SortComponent;
-},{"./templates/sort.html":10,"backbone":14,"lodash":18}],8:[function(require,module,exports){
+},{"./templates/sort.html":10,"backbone":14,"lodash":18}],7:[function(require,module,exports){
 module.exports = "<span>Filter me</span>";
+
+},{}],8:[function(require,module,exports){
+module.exports = "<div class=\"pin leaflet-marker-icon leaflet-zoom-animated leaflet-clickable icon-marker <%=status%>\"></div>\n<img src=\"img/leaflet/marker-shadow.png\" class=\"leaflet-marker-shadow leaflet-zoom-animated\">\n<div class=\"hoverIcons\">\n\t<ul>\n\t<% _.each(badges, function(bool, badge){ \n\t\tif (bool) {%>\n\t\t<li>\n\t\t\t<img src=\"./img/badges/<%=badge%>.png\">\n\t\t</li>\n\t<% \t}\n\t});%>\n\t\t<li><%=grade%></li>\n\t</ul>\n</div>";
 
 },{}],9:[function(require,module,exports){
 module.exports = "<button id=\"toggle-sidebar\" class=\"btn btn-primary\">\n\t<%=props.label%>\n</button>\n<div class=\"row\">\n\t<div class=\"col-xs-12\">\n    <h2><%=vendor.status%> : <%=vendor.name%></h2>\n    <div id=\"vendor-violations\">\n      <% if (vendor.bugs) { %> bugs <% } %>\n      <% if (vendor.slime) { %> slime <% } %>\n      <% if (vendor.rats) { %> rats <% } %>\n      <% if (vendor.condemned) { %> condemend <% } %>\n    </div>\n    <div id=\"vendor-inspections\">\n      <% _.forEach(vendor.inspections, function(insp) { %>\n      <div id=\"vendor-inspection\">\n        <%= insp.status %> on <%= insp.date %>\n        <div id=\"vendor-violations\">\n          <% _.forEach(insp.violations, function(viol) { %>\n            <div class=\"violation-weight\">\n              weight: <%= viol.weight %>\n            </div>\n            <div class=\"violation-comment\">\n              <%= viol.comments %>\n            </div>\n          <% }); %>\n        </div>\n      <% }); %>\n      </div>\n    </div>\n\t</div>\n</div>\n";
@@ -216,7 +223,6 @@ var SidebarComponent = require('../components/sidebar.js');
 var SortComponent = require('../components/sort');
 var FilterComponent = require('../components/filter');
 var MapComponent = require('../components/map');
-
 
 var HomeView = Backbone.View.extend({
 
@@ -267,7 +273,7 @@ var HomeView = Backbone.View.extend({
 });
 
 module.exports = HomeView;
-},{"../components/filter":3,"../components/map":5,"../components/sidebar.js":6,"../components/sort":7,"./templates/home.html":13,"backbone":14,"leaflet":17,"lodash":18}],13:[function(require,module,exports){
+},{"../components/filter":3,"../components/map":4,"../components/sidebar.js":5,"../components/sort":6,"./templates/home.html":13,"backbone":14,"leaflet":17,"lodash":18}],13:[function(require,module,exports){
 module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n\t<div id=\"searchbar\">\n\t\t<div class=\"form-group\">\n\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"find a restaurant\">\n\t\t</div>\n\t</div>\n\t<div id=\"controls\">\n\t\t<div id=\"sort\"></div>\n\t\t<div id=\"filter\"></div>\n\t</div>\n</div>\n<div id=\"sidebar\" class=\"container close-sidebar\"></div>\n";
 
 },{}],14:[function(require,module,exports){
