@@ -1,4 +1,3 @@
-var _ = require('lodash');
 var $ = require('jquery');
 var Backbone = require('backbone');
 
@@ -9,6 +8,10 @@ var VendorCollection = Backbone.Collection.extend({
 	model: VendorModel,
 
 	url: './meta.json'
+
+	_fetch: function() {
+
+	}
 });
 
 module.exports = VendorCollection;
