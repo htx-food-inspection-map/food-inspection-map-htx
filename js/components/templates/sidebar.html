@@ -4,15 +4,29 @@
 <div class="row">
 	<% console.log(vendor) %>
 	<div class="col-xs-12">
-		<h2><%=vendor.name%></h2>
-		<% if (vendor.bugs) { %>
-			bugs
-		<% } %>
-		<% if (vendor.rats) { %>
-			rats
-		<% } %>
-		<% if (vendor.slime) { %>
-			slime
-		<% } %>
+    <h2><%=vendor.status%> : <%=vendor.name%></h2>
+    <div id="vendor-violations">
+      <% if (vendor.bugs) { %> bugs <% } %>
+      <% if (vendor.slime) { %> slime <% } %>
+      <% if (vendor.rats) { %> rats <% } %>
+      <% if (vendor.condemned) { %> condemend <% } %>
+    </div>
+    <div id="vendor-inspections">
+      <% _.forEach(vendor.inspections, function(insp) { %>
+      <div id="vendor-inspection">
+        <%= insp.status %> on <%= insp.date %>
+        <div id="vendor-violations">
+          <% _.forEach(insp.violations, function(viol) { %>
+            <div class="violation-weight">
+              weight: <%= viol.weight %>
+            </div>
+            <div class="violation-comment">
+              <%= viol.comments %>
+            </div>
+          <% }); %>
+        </div>
+      <% }); %>
+      </div>
+    </div>
 	</div>
 </div>
