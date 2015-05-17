@@ -3,3 +3,4 @@ node_modules
 meta.csv
 ./meta.json
 meta_w_flags.csv
+mongoConfig.js

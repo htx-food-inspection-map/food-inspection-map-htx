@@ -30,19 +30,16 @@ var HomeView = Backbone.View.extend({
 		this._filter = new FilterComponent(this._filterData);
 		this._filter.render();
 
-		this._getSidebarData();
-		this._sidebar = new SidebarComponent(this._sidebarData);
+		this._sidebar = new SidebarComponent();
 		this._sidebar.render();
 
 
 		// Events
-		this.listenTo(this._map, 'select:vender', this._showVendor);
+		this.listenTo(this._map, 'select:vendor', this._showVendor);
 	},
 
 	_showVendor: function(vendorId) {
-		this._activeVendorId = vendorId;
-		this._sidebarData = this._getSidebarData();
-		this._sidebar.render(this._sidebarData);
+		this._sidebar.render(this._getSidebarData(vendorId));
 	},
 
 	_getMapData: function() {
@@ -52,10 +49,11 @@ var HomeView = Backbone.View.extend({
 		});
 	},
 
-	_getSidebarData: function() {
-		var activeVendor = _.findWhere(this.collection.models, {id: this._activeVendorId})
+	_getSidebarData: function(vendorId) {
+		var activeVendor = _.findWhere(this.collection.models, {id: vendorId})
 		if(activeVendor){
-			return activeVendor.attributes;			
+			if (!activeVendor._fetched) activeVendor._fetch(vendorId)
+			return activeVendor.attributes;
 		} else {
 			return {};
 		}

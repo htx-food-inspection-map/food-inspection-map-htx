@@ -18,7 +18,7 @@ var MapComponent = Backbone.View.extend({
 		var view = this;
 
 		return function (mapEvent) {
-			view.trigger('select:vender', vendorData.id);
+			view.trigger('select:vendor', vendorData.id);
 		}
 	},
 
@@ -39,10 +39,6 @@ var MapComponent = Backbone.View.extend({
 			var vendor = L.marker([val.lat, val.lng], {icon: hoverIcon}).addTo(this._map);
 			vendor.on('click', this.triggerVendorEvent(val));
 		}.bind(this))
-
-	},
-
-	_hoverDetail: function(e) {
 
 	}
 })

@@ -1,3 +1,4 @@
+var $ = require('jquery');
 var Backbone = require('backbone');
 
 var VendorModel = Backbone.Model.extend({
@@ -10,6 +11,12 @@ var VendorModel = Backbone.Model.extend({
 		}
 
 		return data;
+	},
+
+	_fetch: function(id) {
+		$.get('/accounts/' + id).then(function(data) {
+			console.log(data)
+		})
 	}
 });
 

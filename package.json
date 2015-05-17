@@ -16,7 +16,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.12.3"
+    "express": "^4.12.3",
+    "mongodb": "^2.0.31"
   },
   "devDependencies": {
     "autoprefixer": "^5.1.1",

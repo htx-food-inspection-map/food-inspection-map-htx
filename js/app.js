@@ -9,5 +9,7 @@ function app() {
 	var vendors = new VendorCollection();
 	var home = new HomeView({collection: vendors});
 
-	home.collection.fetch().then(home.render.bind(home));
+	home.collection.fetch().then(function() {
+		home.render();
+	});
 }
