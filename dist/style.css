@@ -6277,21 +6277,59 @@ body, html, #app, #main-container, #map, #map-container {
 .div-marker .hoverIcons {
   position: absolute;
   z-index: 999;
-  background-color: gray;
-  opacity: 0;
-  -webkit-transition: opacity 0.3s;
-          transition: opacity 0.3s;
-  width: 60px;
-  -webkit-transform: translateX(-25%);
-      -ms-transform: translateX(-25%);
-          transform: translateX(-25%);
-  text-align: justify; }
-  .div-marker .hoverIcons > img {
-    display: inline-block; }
+  background-color: #FFF;
+  display: none;
+  -webkit-transform: translate(-32%, -180%);
+      -ms-transform: translate(-32%, -180%);
+          transform: translate(-32%, -180%);
+  text-align: justify;
+  border-radius: 4px;
+  color: #333;
+  font-weight: bold;
+  border: 1px solid #333; }
+  .div-marker .hoverIcons ul {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    width: 80px;
+    text-align: center; }
+  .div-marker .hoverIcons li {
+    display: inline-block;
+    font-size: 20px; }
+    .div-marker .hoverIcons li img {
+      width: 20px; }
+
+.div-marker .pin {
+  position: relative;
+  z-index: 1000;
+  width: 30px;
+  height: 30px;
+  border-radius: 50% 50% 50% 0;
+  background: #89849b;
+  position: absolute;
+  -webkit-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+  left: 50%;
+  top: 50%;
+  margin: -2px 0 0 -8px;
+  border: 1px solid #444; }
+  .div-marker .pin:after {
+    content: '';
+    width: 14px;
+    height: 14px;
+    margin: 8px 0 0 8px;
+    background: #2F2F2F;
+    position: absolute;
+    border-radius: 50%; }
+  .div-marker .pin.FAIL {
+    background: #DD0F0F; }
+  .div-marker .pin.PASS {
+    background: #2DB03E; }
 
 .div-marker .icon-marker {
   position: relative;
   z-index: 1000; }
 
-.div-marker .icon-marker:hover ~ .hoverIcons {
-  opacity: 1; }
+.div-marker .icon-marker:hover ~ .hoverIcons, .div-marker .pin:hover ~ .hoverIcons {
+  display: block; }

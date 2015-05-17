@@ -4,6 +4,8 @@
 $panel-color: rgba(255, 255, 255, 0.75);
 $margin-buffer: 20px;
 
+$hover-radius: 80px;
+
 body, html, #app, #main-container, #map, #map-container {
 	height: 100%;
 }
@@ -46,15 +48,60 @@ body, html, #app, #main-container, #map, #map-container {
 	.hoverIcons {
 		position: absolute;
 		z-index: 999;
-		background-color: gray;
-		opacity: 0;
-		transition: opacity .3s;
-		width: 60px;
-		transform: translateX(-25%);
+		background-color: #FFF;
+		display: none;
+		transform: translate(-32%, -180%);
 		text-align: justify;
+		border-radius: 4px;
+		color: #333;
+		font-weight: bold;
+		border: 1px solid #333;
 
-		& > img {
+		ul {
+			position: relative;
+			margin: 0;
+			padding: 0;
+			width: 80px;
+			text-align: center;
+		}
+
+		li {
 			display: inline-block;
+			font-size: 20px;
+			img {
+				width: 20px;
+			}
+		}
+	}
+	.pin {
+		position: relative;
+		z-index: 1000;
+		width: 30px;
+		height: 30px;
+		border-radius: 50% 50% 50% 0;
+		background: #89849b;
+		position: absolute;
+		transform: rotate(-45deg);
+		left: 50%;
+		top: 50%;
+		margin: -2px 0 0 -8px;
+		border: 1px solid #444;
+
+		&:after {
+			content: '';
+			width: 14px;
+			height: 14px;
+			margin: 8px 0 0 8px;
+			background: #2F2F2F;
+			position: absolute;
+			border-radius: 50%;
+		}
+
+		&.FAIL {
+			background: #DD0F0F;
+		}
+		&.PASS {
+			background: #2DB03E;
 		}
 	}
 
@@ -63,8 +110,8 @@ body, html, #app, #main-container, #map, #map-container {
 		z-index: 1000;
 	}
 
-	.icon-marker:hover ~ .hoverIcons {
-		opacity: 1;
+	.icon-marker:hover ~ .hoverIcons, .pin:hover ~ .hoverIcons {
+		display: block;
 	}
 }
 

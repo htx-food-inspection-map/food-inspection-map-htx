@@ -7,7 +7,6 @@ var SortComponent = require('../components/sort');
 var FilterComponent = require('../components/filter');
 var MapComponent = require('../components/map');
 
-
 var HomeView = Backbone.View.extend({
 
 	el: '#app',

@@ -2,8 +2,8 @@ var _ = require('lodash')
 var Backbone = require('backbone')
 var L = require('leaflet');
 
-var hoverIconHtml = require('./hoverIcons')
-var hoverIcon = L.divIcon({className: 'div-marker', html: hoverIconHtml})
+var hoverIconTemplate = _.template(require('./templates/hoverIcon.html'));
+var grades = ['A','B','C','D','F'];
 
 var MapComponent = Backbone.View.extend({
 
@@ -37,7 +37,13 @@ var MapComponent = Backbone.View.extend({
 		// algorithm for paring down
 
 		_.forEach(this._data.slice(0, 100), function(val) {
+			var badgeData = _.pick(val, 'rats', 'bugs', 'slime');
+			var grade = grades[val.score + 1];
+
+			var hoverIcon = L.divIcon({className: 'div-marker', html: hoverIconTemplate({badges: badgeData, grade: grade, status: val.status})})
+
 			var vendor = L.marker([val.lat, val.lng], {icon: hoverIcon}).addTo(this._map);
+
 			vendor.on('click', this.triggerVendorEvent(val));
 		}.bind(this))
 
