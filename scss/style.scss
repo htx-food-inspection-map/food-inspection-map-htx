@@ -18,6 +18,7 @@ body, html, #app, #main-container, #map, #map-container {
 	right: 0px;
 	top: 0px;
 	transition: right 0.5s;
+  overflow: scroll;
 }
 
 #sidebar.close-sidebar {
@@ -165,6 +166,8 @@ body, html, #app, #main-container, #map, #map-container {
 
 	}
 }
+
+
 
 img.vendor-status {
   width: 40px;
