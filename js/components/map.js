@@ -1,29 +1,19 @@
-var _ = require('lodash');
-var Backbone = require('backbone');
-var leaflet = require('leaflet');
-
-var SortComponent = require('./sort');
-var FilterComponent = require('./filter')
+var _ = require('lodash')
+var Backbone = require('backbone')
+var L = require('leaflet');
+L.Icon.Default.imagePath = 'img/leaflet'
 
 var MapComponent = Backbone.View.extend({
 
-	el: '#map-container',
+	el: "#map",
 
-	template: _.template(require('./templates/map.html')),
-
-	render: function(data) {
-		this.el.innerHTML = this.template(data);
-		this.sort = new SortComponent();
-		this.sort.render();
-		this.filter = new FilterComponent();
-		this.filter.render();
-
-		var map = L.map(document.querySelector('#map')).setView([51.505, -0.09], 13);
+	render: function() {
+		if(!this.map) this.map = L.map(document.querySelector('#map')).setView([29.762778, -95.383056], 11);
 
 		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-		}).addTo(map);
+		}).addTo(this.map);
 	}
-});
+})
 
 module.exports = MapComponent;

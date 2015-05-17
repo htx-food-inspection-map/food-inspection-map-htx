@@ -1,19 +1,22 @@
 var Backbone = require('backbone');
+
 var HomeView = require('./pages/home.js');
+var VendorCollection = require('./collections/vendor.js');
 
 var Router = Backbone.Router.extend({
 
 	initialize: function() {
-		this.home = new HomeView();
-		Backbone.history.start()
+		this.vendors = new VendorCollection();
+		this.home = new HomeView({collection: this.vendors})
+		Backbone.history.start();
 	},
 
 	routes: {
-		'': 'home'
+		'*path': 'home'
 	},
 
 	home: function() {
-		this.home.render();
+		this.vendors.fetch().then(this.home.render.bind(this.home));
 	}
 });
 

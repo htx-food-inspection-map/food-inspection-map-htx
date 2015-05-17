@@ -3,7 +3,7 @@ var Backbone = require('backbone');
 
 var SidebarComponent = Backbone.View.extend({
 
-	el: "#sidebar-container",
+	el: "#sidebar",
 
 	template: _.template(require('./templates/sidebar.html')),
 
