@@ -26,11 +26,13 @@ var MapComponent = Backbone.View.extend({
 
 		// algorithm for paring down
 
-		// L.Marker([this._data[0].lat, this._data[1].lng]).addTo(this._map)
-
 		_.forEach(this._data.slice(0, 100), function(val) {
-			L.marker([val.lat, val.lng]).addTo(this._map)
+			var marker = L.marker([val.lat, val.lng]).addTo(this._map)
 		}.bind(this))
+	},
+
+	_hoverDetail: function(e) {
+
 	}
 })
 

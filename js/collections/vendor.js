@@ -7,10 +7,10 @@ var VendorCollection = Backbone.Collection.extend({
 
 	model: VendorModel,
 
-	url: './meta.json'
+	url: './meta.json',
 
 	_fetch: function() {
-
+		// get additional data
 	}
 });
 
