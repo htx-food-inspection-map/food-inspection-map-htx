@@ -1,5 +1,5 @@
 node_modules
 .DS_Store
 meta.csv
-meta.json
+./meta.json
 meta_w_flags.csv
