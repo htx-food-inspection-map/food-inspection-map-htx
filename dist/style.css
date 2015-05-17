@@ -6270,3 +6270,25 @@ body, html, #app, #main-container, #map, #map-container {
   position: absolute;
   margin-left: -100px;
   margin-top: 20px; }
+
+.div-marker .hoverIcons {
+  position: absolute;
+  z-index: 999;
+  background-color: gray;
+  opacity: 0;
+  -webkit-transition: opacity 0.3s;
+          transition: opacity 0.3s;
+  width: 60px;
+  -webkit-transform: translateX(-25%);
+      -ms-transform: translateX(-25%);
+          transform: translateX(-25%);
+  text-align: justify; }
+  .div-marker .hoverIcons > img {
+    display: inline-block; }
+
+.div-marker .icon-marker {
+  position: relative;
+  z-index: 1000; }
+
+.div-marker .icon-marker:hover ~ .hoverIcons {
+  opacity: 1; }

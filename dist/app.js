@@ -12,7 +12,7 @@ function app() {
 
 	home.collection.fetch().then(home.render.bind(home));
 }
-},{"./collections/vendor.js":2,"./pages/home.js":11}],2:[function(require,module,exports){
+},{"./collections/vendor.js":2,"./pages/home.js":12}],2:[function(require,module,exports){
 var $ = require('jquery');
 var Backbone = require('backbone');
 
@@ -30,7 +30,7 @@ var VendorCollection = Backbone.Collection.extend({
 });
 
 module.exports = VendorCollection;
-},{"../models/vendor":10,"backbone":13,"jquery":15}],3:[function(require,module,exports){
+},{"../models/vendor":11,"backbone":14,"jquery":16}],3:[function(require,module,exports){
 var _ = require('lodash');
 var Backbone = require('backbone');
 
@@ -46,12 +46,15 @@ var FilterComponent = Backbone.View.extend({
 });
 
 module.exports = FilterComponent;
-},{"./templates/filter.html":7,"backbone":13,"lodash":17}],4:[function(require,module,exports){
+},{"./templates/filter.html":8,"backbone":14,"lodash":18}],4:[function(require,module,exports){
+module.exports = '<img src="img/leaflet/marker-icon.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable icon-marker"><img src="img/leaflet/marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated"><div class="hoverIcons"><img src="./img/nastyIconPlaceholder.png" class="rodent-icon"><img src="./img/nastyIconPlaceholder.png" class="slime-icon"><img src="./img/nastyIconPlaceholder.png" class="bug-icon"></div>'
+},{}],5:[function(require,module,exports){
 var _ = require('lodash')
 var Backbone = require('backbone')
 var L = require('leaflet');
 
-L.Icon.Default.imagePath = 'img/leaflet'
+var hoverIconHtml = require('./hoverIcons')
+var hoverIcon = L.divIcon({className: 'div-marker', html: hoverIconHtml})
 
 var MapComponent = Backbone.View.extend({
 
@@ -76,9 +79,9 @@ var MapComponent = Backbone.View.extend({
 		// algorithm for paring down
 
 		_.forEach(this._data.slice(0, 100), function(val) {
-			var marker = L.marker([val.lat, val.lng]).addTo(this._map)
-			console.log(marker)
+			var marker = L.marker([val.lat, val.lng], {icon: hoverIcon}).addTo(this._map)
 		}.bind(this))
+
 	},
 
 	_hoverDetail: function(e) {
@@ -87,7 +90,7 @@ var MapComponent = Backbone.View.extend({
 })
 
 module.exports = MapComponent;
-},{"backbone":13,"leaflet":16,"lodash":17}],5:[function(require,module,exports){
+},{"./hoverIcons":4,"backbone":14,"leaflet":17,"lodash":18}],6:[function(require,module,exports){
 var _ = require('lodash');
 var Backbone = require('backbone');
 
@@ -127,7 +130,7 @@ var SidebarComponent = Backbone.View.extend({
 });
 
 module.exports = SidebarComponent;
-},{"./templates/sidebar.html":8,"backbone":13,"lodash":17}],6:[function(require,module,exports){
+},{"./templates/sidebar.html":9,"backbone":14,"lodash":18}],7:[function(require,module,exports){
 var _ = require('lodash');
 var Backbone = require('backbone');
 
@@ -143,16 +146,16 @@ var SortComponent = Backbone.View.extend({
 });
 
 module.exports = SortComponent;
-},{"./templates/sort.html":9,"backbone":13,"lodash":17}],7:[function(require,module,exports){
+},{"./templates/sort.html":10,"backbone":14,"lodash":18}],8:[function(require,module,exports){
 module.exports = "<span>Filter me</span>";
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 module.exports = "<button id=\"toggle-sidebar\" class=\"btn btn-primary\">\n\tHIDE\n</button>\n<div class=\"row\">\n\t<div class=\"col-xs-12\">\n\t\t<h1>Vendor Name</h1>\n\t</div>\n</div>";
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 module.exports = "<span>Sort me</span>";
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var Backbone = require('backbone');
 
 var VendorModel = Backbone.Model.extend({
@@ -169,7 +172,7 @@ var VendorModel = Backbone.Model.extend({
 });
 
 module.exports = VendorModel;
-},{"backbone":13}],11:[function(require,module,exports){
+},{"backbone":14}],12:[function(require,module,exports){
 var _ = require('lodash');
 var Backbone = require('backbone');
 var L = require('leaflet');
@@ -216,10 +219,10 @@ var HomeView = Backbone.View.extend({
 });
 
 module.exports = HomeView;
-},{"../components/filter":3,"../components/map":4,"../components/sidebar.js":5,"../components/sort":6,"./templates/home.html":12,"backbone":13,"leaflet":16,"lodash":17}],12:[function(require,module,exports){
+},{"../components/filter":3,"../components/map":5,"../components/sidebar.js":6,"../components/sort":7,"./templates/home.html":13,"backbone":14,"leaflet":17,"lodash":18}],13:[function(require,module,exports){
 module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n\t<div id=\"searchbar\">\n\t\t<div class=\"form-group\">\n\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"find a restaurant\">\n\t\t</div>\n\t</div>\n\t<div id=\"controls\">\n\t\t<div id=\"sort\"></div>\n\t\t<div id=\"filter\"></div>\n\t</div>\n</div>\n<div id=\"sidebar\" class=\"container\"></div>\n";
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.2.0
 
@@ -2091,7 +2094,7 @@ module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n\t<div i
 }));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":15,"underscore":14}],14:[function(require,module,exports){
+},{"jquery":16,"underscore":15}],15:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -3641,7 +3644,7 @@ module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n\t<div i
   }
 }.call(this));
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.4
  * http://jquery.com/
@@ -12853,7 +12856,7 @@ return jQuery;
 
 }));
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /*
  Leaflet, a JavaScript library for mobile-friendly interactive maps. http://leafletjs.com
  (c) 2010-2013, Vladimir Agafonkin
@@ -22034,7 +22037,7 @@ L.Map.include({
 
 
 }(window, document));
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 (function (global){
 /**
  * @license

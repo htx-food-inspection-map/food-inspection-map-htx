@@ -2,7 +2,8 @@ var _ = require('lodash')
 var Backbone = require('backbone')
 var L = require('leaflet');
 
-L.Icon.Default.imagePath = 'img/leaflet'
+var hoverIconHtml = require('./hoverIcons')
+var hoverIcon = L.divIcon({className: 'div-marker', html: hoverIconHtml})
 
 var MapComponent = Backbone.View.extend({
 
@@ -27,8 +28,9 @@ var MapComponent = Backbone.View.extend({
 		// algorithm for paring down
 
 		_.forEach(this._data.slice(0, 100), function(val) {
-			var marker = L.marker([val.lat, val.lng]).addTo(this._map)
+			var marker = L.marker([val.lat, val.lng], {icon: hoverIcon}).addTo(this._map)
 		}.bind(this))
+
 	},
 
 	_hoverDetail: function(e) {
