@@ -81,13 +81,19 @@ var MapComponent = Backbone.View.extend({
 		var view = this;
 
 		return function (mapEvent) {
+			var active = view.el.querySelector('.active');
+			if(active){
+				active.classList.remove('active');				
+			}
+
+			this._icon.childNodes[0].classList.add('active');
 			view.trigger('select:vendor', vendorData.id);
 		}
 	},
 
 	render: function() {
 		_.forEach(this._data.slice(0, 100), function(val) {
-			console.log(val)
+
 			var badgeData = _.pick(val, 'rats', 'bugs', 'slime');
 			var grade = grades[val.score + 1];
 
