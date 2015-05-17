@@ -1,1 +1,10 @@
 @import "../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+@import "./leaflet.scss";
+
+#map-container {
+	height: 100vh;
+}
+
+#map {
+	height: 70%;
+}
