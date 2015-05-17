@@ -2,7 +2,8 @@ var _ = require('lodash')
 var Backbone = require('backbone')
 var L = require('leaflet');
 
-L.Icon.Default.imagePath = 'img/leaflet'
+var hoverIconHtml = require('./hoverIcons')
+var hoverIcon = L.divIcon({className: 'div-marker', html: hoverIconHtml})
 
 var MapComponent = Backbone.View.extend({
 
@@ -38,6 +39,7 @@ var MapComponent = Backbone.View.extend({
 			var vendor = L.marker([val.lat, val.lng]).addTo(this._map);
 			vendor.on('click', this.triggerVendorEvent(val));
 		}.bind(this))
+
 	},
 
 	_hoverDetail: function(e) {

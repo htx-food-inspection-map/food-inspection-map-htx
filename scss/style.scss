@@ -42,3 +42,29 @@ body, html, #app, #main-container, #map, #map-container {
 	margin-top: $margin-buffer;
 }
 
+.div-marker {
+	.hoverIcons {
+		position: absolute;
+		z-index: 999;
+		background-color: gray;
+		opacity: 0;
+		transition: opacity .3s;
+		width: 60px;
+		transform: translateX(-25%);
+		text-align: justify;
+
+		& > img {
+			display: inline-block;
+		}
+	}
+
+	.icon-marker {
+		position: relative;
+		z-index: 1000;
+	}
+
+	.icon-marker:hover ~ .hoverIcons {
+		opacity: 1;
+	}
+}
+
