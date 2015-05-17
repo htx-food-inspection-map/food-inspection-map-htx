@@ -87,7 +87,7 @@ var MapComponent = Backbone.View.extend({
 		// algorithm for paring down
 
 		_.forEach(this._data.slice(0, 100), function(val) {
-			var vendor = L.marker([val.lat, val.lng]).addTo(this._map);
+			var vendor = L.marker([val.lat, val.lng], {icon: hoverIcon}).addTo(this._map);
 			vendor.on('click', this.triggerVendorEvent(val));
 		}.bind(this))
 
