@@ -6254,6 +6254,9 @@ body, html, #app, #main-container, #map, #map-container {
   -webkit-transition: right 0.5s;
           transition: right 0.5s; }
 
+#sidebar.close-sidebar {
+  right: -30%; }
+
 #searchbar {
   position: absolute;
   top: 20px;

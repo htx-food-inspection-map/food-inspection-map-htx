@@ -65,6 +65,14 @@ var MapComponent = Backbone.View.extend({
 		this._data = data;
 	},
 
+	triggerVendorEvent: function(vendorData) {
+		var view = this;
+
+		return function (mapEvent) {
+			view.trigger('select:vender', vendorData.id);
+		}
+	},
+
 	render: function() {
 		L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/maptile/{mapID}/normal.day/{z}/{x}/{y}/256/png8?app_id={app_id}&app_code={app_code}', {
 			attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
@@ -79,7 +87,8 @@ var MapComponent = Backbone.View.extend({
 		// algorithm for paring down
 
 		_.forEach(this._data.slice(0, 100), function(val) {
-			var marker = L.marker([val.lat, val.lng], {icon: hoverIcon}).addTo(this._map)
+			var vendor = L.marker([val.lat, val.lng]).addTo(this._map);
+			vendor.on('click', this.triggerVendorEvent(val));
 		}.bind(this))
 
 	},
@@ -101,11 +110,40 @@ var SidebarComponent = Backbone.View.extend({
 	template: _.template(require('./templates/sidebar.html')),
 
 	initialize: function() {
-		this.showing = true;
+		this.showing = false;
+		this.vendor = {};
+	},
+
+	getProps: function() {
+		var props;
+
+		if(this.showing){
+			props = {
+				className: 'open-sidebar',
+				label: 'Hide'
+			};
+		} else {
+			props = {
+				className: 'close-sidebar',
+				label: 'Show'
+			};
+		}
+
+		return props;
+	},
+
+	update: function(data) {
+		if(!_.isEmpty(data)){
+			this.showing = true;
+			this.vendor = _.clone(data);
+		}
 	},
 
 	render: function(data) {
-		this.el.innerHTML = this.template(data);
+		this.update(data);
+		this.el.innerHTML = this.template({props: this.getProps(), vendor: this.vendor});
+
+		this.el.className = 'container ' + this.getProps().className;
 	},
 
 	events: {
@@ -115,15 +153,8 @@ var SidebarComponent = Backbone.View.extend({
 	slideSidebar: function() {
 
 		this.showing = !this.showing;
-		console.log(this.$el.outerWidth())
-		if(this.showing){
-			this.$el.css("right", 0);
-			this.$el.find("#toggle-sidebar").html("HIDE");
-		}
-		else{
-			this.$el.css("right", -1 * this.$el.outerWidth());
-			this.$el.find("#toggle-sidebar").html("SHOW");
-		}
+
+		this.render();
 
 	}
 
@@ -150,7 +181,7 @@ module.exports = SortComponent;
 module.exports = "<span>Filter me</span>";
 
 },{}],9:[function(require,module,exports){
-module.exports = "<button id=\"toggle-sidebar\" class=\"btn btn-primary\">\n\tHIDE\n</button>\n<div class=\"row\">\n\t<div class=\"col-xs-12\">\n\t\t<h1>Vendor Name</h1>\n\t</div>\n</div>";
+module.exports = "<button id=\"toggle-sidebar\" class=\"btn btn-primary\">\n\t<%=props.label%>\n</button>\n<div class=\"row\">\n\t<div class=\"col-xs-12\">\n\t\t<h2><%=vendor.name%></h2>\n\t</div>\n</div>";
 
 },{}],10:[function(require,module,exports){
 module.exports = "<span>Sort me</span>";
@@ -189,6 +220,10 @@ var HomeView = Backbone.View.extend({
 
 	template: _.template(require('./templates/home.html')),
 
+	initialize: function() {
+		this._activeVendorId = false;
+	},
+
 	render: function(data) {
 		this.el.innerHTML = this.template(data);
 
@@ -204,6 +239,16 @@ var HomeView = Backbone.View.extend({
 		this._getSidebarData();
 		this._sidebar = new SidebarComponent(this._sidebarData);
 		this._sidebar.render();
+
+
+		// Events
+		this.listenTo(this._map, 'select:vender', this._showVendor);
+	},
+
+	_showVendor: function(vendorId) {
+		this._activeVendorId = vendorId;
+		this._sidebarData = this._getSidebarData();
+		this._sidebar.render(this._sidebarData);
 	},
 
 	_getMapData: function() {
@@ -214,7 +259,12 @@ var HomeView = Backbone.View.extend({
 	},
 
 	_getSidebarData: function() {
-		return {};
+		var activeVendor = _.findWhere(this.collection.models, {id: this._activeVendorId})
+		if(activeVendor){
+			return activeVendor.attributes;			
+		} else {
+			return {};
+		}
 	}
 });
 
