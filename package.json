@@ -2,7 +2,7 @@
   "name": "food-map",
   "version": "1.0.0",
   "description": "map of health inspections in houston",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "test",
     "start": "node devServer.js & npm run watch",
