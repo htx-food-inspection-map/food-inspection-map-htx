@@ -165,5 +165,25 @@ body, html, #app, #main-container, #map, #map-container {
 	}
 }
 
+img.vendor-status {
+  width: 40px;
+}
 
+img.vendor-status-small {
+  width: 30px;
+}
 
+.violation-comment {
+  margin-left: 40px;
+  margin-bottom: 10px;
+  color: #6D6D6D;
+  background: #FFFCC5;
+  padding: 14px;
+  border-radius: 3px;
+  border: 1px solid #DDD;
+}
+
+.inspection-title {
+  display: inline;
+  font-weight: bold;
+}

@@ -4,21 +4,34 @@
 <div class="row">
 	<% console.log(vendor) %>
 	<div class="col-xs-12">
-    <h2><%=vendor.status%> : <%=vendor.name%></h2>
+    <h2>
+      <% if (vendor.status == "PASS") { %>
+        <img class="vendor-status" src="img/check.png">
+      <% } else { %>
+        <img class="vendor-status" src="img/x.png">
+      <% } %>
+      <%=vendor.name%></h2>
     <div id="vendor-violations">
-      <% if (vendor.bugs) { %> bugs <% } %>
-      <% if (vendor.slime) { %> slime <% } %>
-      <% if (vendor.rats) { %> rats <% } %>
-      <% if (vendor.condemned) { %> condemend <% } %>
+      <% if (vendor.bugs) { %> <img src="img/bug.png"> <% } %>
+      <% if (vendor.slime) { %> <img src="img/slime.png"> <% } %>
+      <% if (vendor.rats) { %> <img src="img/rat.png"> <% } %>
+      <% if (vendor.condemned) { %> <img src="img/condemned.png"> <% } %>
     </div>
     <div id="vendor-inspections">
       <% _.forEach(vendor.inspections, function(insp) { %>
       <div id="vendor-inspection">
-        <%= insp.status %> on <%= insp.date %>
+        
+        <% if (vendor.status == "PASS") { %>
+          <img class="vendor-status-small" src="img/check.png">
+        <% } else { %>
+          <img class="vendor-status-small" src="img/x.png">
+        <% } %>
+        <div class="inspection-title"> Inspection:</div>
+        <%= insp.date %>
         <div id="vendor-violations">
           <% _.forEach(insp.violations, function(viol) { %>
             <div class="violation-weight">
-              weight: <%= viol.weight %>
+              <!-- weight: <%= viol.weight %> -->
             </div>
             <div class="violation-comment">
               <%= viol.comments %>
