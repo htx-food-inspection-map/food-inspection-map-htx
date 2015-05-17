@@ -60,10 +60,16 @@ var MapComponent = Backbone.View.extend({
 	el: "#map",
 
 	render: function() {
-		if(!this.map) this.map = L.map(document.querySelector('#map')).setView([29.762778, -95.383056], 11);
+		if(!this.map) this.map = L.map(document.querySelector('#map')).setView([29.762778, -95.383056], 13);
 
-		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/maptile/{mapID}/normal.day/{z}/{x}/{y}/256/png8?app_id={app_id}&app_code={app_code}', {
+			attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
+			subdomains: '1234',
+			mapID: 'newest',
+			app_id: 'Y8m9dK2brESDPGJPdrvs',
+			app_code: 'dq2MYIvjAotR8tHvY8Q_Dg',
+			base: 'base',
+			maxZoom: 20
 		}).addTo(this.map);
 	}
 })
@@ -84,11 +90,22 @@ var SidebarComponent = Backbone.View.extend({
 	},
 
 	events: {
-		"click #button": "slideSidebar"
+		"click #toggle-sidebar": "slideSidebar"
 	},
 
-	handleClick: function() {
-		//animation here
+	slideSidebar: function() {
+
+		this.showing = !this.showing;
+
+		if(this.showing){
+			this.$el.find("#sidebar").css("right", 0)
+			this.$el.find("#toggle-sidebar").html("HIDE")
+		}
+		else{
+			this.$el.find("#sidebar").css("right", -400)
+			this.$el.find("#toggle-sidebar").html("SHOW")
+		}
+
 	}
 
 });
@@ -114,7 +131,7 @@ module.exports = SortComponent;
 module.exports = "<span>Filter me</span>";
 
 },{}],8:[function(require,module,exports){
-module.exports = "<span id=\"event\">all that sidebar info</span>\n";
+module.exports = "<div class=\"row\">\n\t<div class=\"col-xs-12\">\n\t\t<h1>Vendor Name</h1>\n\t</div>\n</div>\n<button id=\"toggle-sidebar\" class=\"btn btn-primary\">\n\tHIDE\n</button>";
 
 },{}],9:[function(require,module,exports){
 module.exports = "<span>Sort me</span>";
@@ -192,7 +209,7 @@ var HomeView = Backbone.View.extend({
 
 module.exports = HomeView;
 },{"../components/filter":3,"../components/map":4,"../components/sidebar.js":5,"../components/sort":6,"./templates/home.html":12,"backbone":15,"leaflet":18,"lodash":19}],12:[function(require,module,exports){
-module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n\t<div id=\"searchbar\">\n\t\t<input type=\"text\" placeholder=\"find a restaurant\">\n\t</div>\n\t<div id=\"controls\">\n\t\t<div id=\"sort\"></div>\n\t\t<div id=\"filter\"></div>\n\t</div>\n</div>\n<div id=\"sidebar\">\n</div>\n";
+module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n\t<div id=\"searchbar\">\n\t\t<div class=\"form-group\">\n\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"find a restaurant\">\n\t\t</div>\n\t</div>\n\t<div id=\"controls\">\n\t\t<div id=\"sort\"></div>\n\t\t<div id=\"filter\"></div>\n\t</div>\n</div>\n<div id=\"sidebar\" class=\"container\"></div>\n";
 
 },{}],13:[function(require,module,exports){
 var Backbone = require('backbone');

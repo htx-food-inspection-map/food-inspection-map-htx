@@ -12,11 +12,22 @@ var SidebarComponent = Backbone.View.extend({
 	},
 
 	events: {
-		"click #button": "slideSidebar"
+		"click #toggle-sidebar": "slideSidebar"
 	},
 
-	handleClick: function() {
-		//animation here
+	slideSidebar: function() {
+
+		this.showing = !this.showing;
+
+		if(this.showing){
+			this.$el.find("#sidebar").css("right", 0)
+			this.$el.find("#toggle-sidebar").html("HIDE")
+		}
+		else{
+			this.$el.find("#sidebar").css("right", -400)
+			this.$el.find("#toggle-sidebar").html("SHOW")
+		}
+
 	}
 
 });
