@@ -6267,4 +6267,6 @@ body, html, #app, #main-container, #map, #map-container {
   background-color: rgba(255, 255, 255, 0.75); }
 
 #toggle-sidebar {
-  margin-left: -100px; }
+  position: absolute;
+  margin-left: -100px;
+  margin-top: 20px; }

@@ -33,6 +33,8 @@ body, html, #app, #main-container, #map, #map-container {
 }
 
 #toggle-sidebar {
+	position: absolute;
 	margin-left: -100px;
+	margin-top: $margin-buffer;
 }
 
