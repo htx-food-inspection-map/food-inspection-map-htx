@@ -43,7 +43,7 @@ var HomeView = Backbone.View.extend({
 	_getMapData: function(data) {
 		if (!data) data = this.collection.models;
 		return _.map(data, function(val) {
-			var newVal = _.pick(val.attributes, ['lat', 'lng', 'bugs', 'rats', 'score', 'slime', 'status', 'id']);
+			var newVal = _.pick(val.attributes, ['lat', 'lng', 'bugs', 'rats', 'score', 'slime', 'status', 'id', 'name']);
 			return newVal;
 		});
 	},

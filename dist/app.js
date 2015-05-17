@@ -87,10 +87,11 @@ var MapComponent = Backbone.View.extend({
 
 	render: function() {
 		_.forEach(this._data.slice(0, 100), function(val) {
+			console.log(val)
 			var badgeData = _.pick(val, 'rats', 'bugs', 'slime');
 			var grade = grades[val.score + 1];
 
-			var hoverIcon = L.divIcon({className: 'div-marker', html: hoverIconTemplate({badges: badgeData, grade: grade, status: val.status})})
+			var hoverIcon = L.divIcon({className: 'div-marker', html: hoverIconTemplate({badges: badgeData, grade: grade, status: val.status, name: val.name})})
 
 			var vendor = L.marker([val.lat, val.lng], {icon: hoverIcon}).addTo(this._map);
 
@@ -178,7 +179,7 @@ module.exports = SortComponent;
 module.exports = "<span>Filter me</span>";
 
 },{}],8:[function(require,module,exports){
-module.exports = "<div class=\"pin leaflet-marker-icon leaflet-zoom-animated leaflet-clickable icon-marker <%=status%>\"></div>\n<img src=\"img/leaflet/marker-shadow.png\" class=\"leaflet-marker-shadow leaflet-zoom-animated\">\n<div class=\"hoverIcons\">\n\t<ul>\n\t<% _.each(badges, function(bool, badge){ \n\t\tif (bool) {%>\n\t\t<li>\n\t\t\t<img src=\"./img/badges/<%=badge%>.png\">\n\t\t</li>\n\t<% \t}\n\t});%>\n\t\t<li><%=grade%></li>\n\t</ul>\n</div>";
+module.exports = "<div class=\"pin leaflet-marker-icon leaflet-zoom-animated leaflet-clickable icon-marker <%=status%>\"></div>\n<img src=\"img/leaflet/marker-shadow.png\" class=\"leaflet-marker-shadow leaflet-zoom-animated\">\n<div class=\"hoverIcons\">\n\t<ul>\n\t<% _.each(badges, function(bool, badge){\n\t\tif (bool) {%>\n\t\t<li>\n\t\t\t<img src=\"./img/badges/<%=badge%>.png\">\n\t\t</li>\n\t<% \t}\n\t});%>\n\t\t<li><%=grade%></li>\n\t\t<li class=\"hover-name\"><%= name %></li>\n\t</ul>\n</div>";
 
 },{}],9:[function(require,module,exports){
 module.exports = "<button id=\"toggle-sidebar\" class=\"btn btn-primary\">\n\t<%=props.label%>\n</button>\n<div class=\"row\">\n\t<% console.log(vendor) %>\n\t<div class=\"col-xs-12\">\n    <h2><%=vendor.status%> : <%=vendor.name%></h2>\n    <div id=\"vendor-violations\">\n      <% if (vendor.bugs) { %> bugs <% } %>\n      <% if (vendor.slime) { %> slime <% } %>\n      <% if (vendor.rats) { %> rats <% } %>\n      <% if (vendor.condemned) { %> condemend <% } %>\n    </div>\n    <div id=\"vendor-inspections\">\n      <% _.forEach(vendor.inspections, function(insp) { %>\n      <div id=\"vendor-inspection\">\n        <%= insp.status %> on <%= insp.date %>\n        <div id=\"vendor-violations\">\n          <% _.forEach(insp.violations, function(viol) { %>\n            <div class=\"violation-weight\">\n              weight: <%= viol.weight %>\n            </div>\n            <div class=\"violation-comment\">\n              <%= viol.comments %>\n            </div>\n          <% }); %>\n        </div>\n      <% }); %>\n      </div>\n    </div>\n\t</div>\n</div>\n";
@@ -260,7 +261,7 @@ var HomeView = Backbone.View.extend({
 	_getMapData: function(data) {
 		if (!data) data = this.collection.models;
 		return _.map(data, function(val) {
-			var newVal = _.pick(val.attributes, ['lat', 'lng', 'bugs', 'rats', 'score', 'slime', 'status', 'id']);
+			var newVal = _.pick(val.attributes, ['lat', 'lng', 'bugs', 'rats', 'score', 'slime', 'status', 'id', 'name']);
 			return newVal;
 		});
 	},

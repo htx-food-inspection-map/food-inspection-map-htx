@@ -2,7 +2,7 @@
 <img src="img/leaflet/marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated">
 <div class="hoverIcons">
 	<ul>
-	<% _.each(badges, function(bool, badge){ 
+	<% _.each(badges, function(bool, badge){
 		if (bool) {%>
 		<li>
 			<img src="./img/badges/<%=badge%>.png">
@@ -10,5 +10,6 @@
 	<% 	}
 	});%>
 		<li><%=grade%></li>
+		<li class="hover-name"><%= name %></li>
 	</ul>
 </div>

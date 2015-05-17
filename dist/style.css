@@ -6312,6 +6312,8 @@ body, html, #app, #main-container, #map, #map-container {
     font-size: 20px; }
     .div-marker .hoverIcons li img {
       width: 20px; }
+  .div-marker .hoverIcons li.hover-name {
+    font-size: 1em; }
 
 .div-marker .pin {
   position: relative;

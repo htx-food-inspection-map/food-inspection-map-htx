@@ -92,6 +92,10 @@ body, html, #app, #main-container, #map, #map-container {
 				width: 20px;
 			}
 		}
+
+		li.hover-name {
+			font-size: 1em;
+		}
 	}
 	.pin {
 		position: relative;
@@ -134,4 +138,6 @@ body, html, #app, #main-container, #map, #map-container {
 		display: block;
 	}
 }
+
+
 

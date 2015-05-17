@@ -36,10 +36,11 @@ var MapComponent = Backbone.View.extend({
 
 	render: function() {
 		_.forEach(this._data.slice(0, 100), function(val) {
+			console.log(val)
 			var badgeData = _.pick(val, 'rats', 'bugs', 'slime');
 			var grade = grades[val.score + 1];
 
-			var hoverIcon = L.divIcon({className: 'div-marker', html: hoverIconTemplate({badges: badgeData, grade: grade, status: val.status})})
+			var hoverIcon = L.divIcon({className: 'div-marker', html: hoverIconTemplate({badges: badgeData, grade: grade, status: val.status, name: val.name})})
 
 			var vendor = L.marker([val.lat, val.lng], {icon: hoverIcon}).addTo(this._map);
 
