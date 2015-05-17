@@ -1,1 +1,26 @@
-@import "../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+@import "../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss"; 
+@import "./leaflet.scss"; 
+
+#main-container {
+	height: 100%;
+}
+
+#sidebar {
+	position: fixed;
+	background-color: #333;
+	width: 400px;
+	height: 800px;
+	right: 0px;
+	top: 0px;
+	transition: right 0.5s;
+}
+
+#toggle-sidebar {
+	margin-left: -100px;
+}
+body, html, #map, #app, #map-container {
+	height: 100%;
+}
+
+
+

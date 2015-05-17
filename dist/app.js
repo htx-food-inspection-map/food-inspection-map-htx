@@ -40,16 +40,30 @@ var SidebarComponent = Backbone.View.extend({
 
 	template: _.template(require('./templates/sidebar.html')),
 
+	initialize: function() {
+		this.showing = true;
+	},
+
 	render: function(data) {
 		this.el.innerHTML = this.template(data);
 	},
 
 	events: {
-		"click #button": "slideSidebar"
+		"click #toggle-sidebar": "toggleSidebar"
 	},
 
-	handleClick: function() {
-		//animation here
+	toggleSidebar: function() {
+
+		this.showing = !this.showing;
+
+		if(this.showing){
+			this.$el.find("#sidebar").css("right", 0)
+			this.$el.find("#toggle-sidebar").html("HIDE")
+		}
+		else{
+			this.$el.find("#sidebar").css("right", -400)
+			this.$el.find("#toggle-sidebar").html("SHOW")
+		}
 	}
 
 });
@@ -59,7 +73,7 @@ module.exports = SidebarComponent;
 module.exports = "<div id=\"map\"></div>\n<div id=\"searchbar\">\n\t<input type=\"text\" placeholder=\"find a restaurant\">\n</div>\n<div id=\"controls\">\n\t<div id=\"sort\"></div>\n\t<div id=\"filter\"></div>\n</div>\n";
 
 },{}],5:[function(require,module,exports){
-module.exports = "<div class=\"sidebar\">\n\t<span id=\"event\">all that sidebar info</span>\n</div>";
+module.exports = "<div id=\"sidebar\">\n\t<button id=\"toggle-sidebar\" class=\"btn btn-primary\">\n\t\tHIDE\n\t</button>\n</div>";
 
 },{}],6:[function(require,module,exports){
 var _ = require('lodash');
