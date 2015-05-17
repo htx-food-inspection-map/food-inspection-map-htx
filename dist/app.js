@@ -261,7 +261,7 @@ var HomeView = Backbone.View.extend({
 
 module.exports = HomeView;
 },{"../components/filter":3,"../components/map":5,"../components/sidebar.js":6,"../components/sort":7,"./templates/home.html":13,"backbone":14,"leaflet":17,"lodash":18}],13:[function(require,module,exports){
-module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n<!-- \t<div id=\"searchbar\">\n\t\t<form class=\"form-group\">\n\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"find a restaurant\">\n\t\t</form>\n\t</div> -->\n\t<div id=\"controls\">\n\t\t<div id=\"sort\"></div>\n\t\t<div id=\"filter\"></div>\n\t</div>\n</div>\n<div id=\"sidebar\" class=\"container close-sidebar\"></div>\n";
+module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n<!-- \t<div id=\"searchbar\">\n\t\t<form class=\"form-group\">\n\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"find a restaurant\">\n\t\t</form>\n\t</div> -->\n\t<div id=\"controls\">\n\t\t<img src=\"./img/buggg.png\">\n\t\t<h3>Food<br>Inspection<br>Map<br><i>HTX</i></h3>\n\t</div>\n</div>\n<div id=\"sidebar\" class=\"container close-sidebar\"></div>\n";
 
 },{}],14:[function(require,module,exports){
 (function (global){

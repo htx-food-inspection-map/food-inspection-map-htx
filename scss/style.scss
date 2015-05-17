@@ -38,6 +38,22 @@ body, html, #app, #main-container, #map, #map-container {
 	bottom: $margin-buffer;
 	left: $margin-buffer;
 	background-color: $panel-color;
+	text-align: justify;
+	padding: 1em 0em;
+
+	img {
+		margin-left: 3.5em;
+		width: 40%;
+		display: inline-block;
+	}
+
+	h3 {
+		display: inline-block;
+		margin-left: 2em;
+		vertical-align: bottom;
+		margin-right: -5em;
+		margin-bottom: 1em;
+	}
 }
 
 #toggle-sidebar {
