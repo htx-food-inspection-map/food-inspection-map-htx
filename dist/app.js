@@ -153,6 +153,7 @@ var SidebarComponent = Backbone.View.extend({
 });
 
 module.exports = SidebarComponent;
+
 },{"./templates/sidebar.html":9,"backbone":14,"lodash":18}],7:[function(require,module,exports){
 var _ = require('lodash');
 var Backbone = require('backbone');
@@ -173,7 +174,7 @@ module.exports = SortComponent;
 module.exports = "<span>Filter me</span>";
 
 },{}],9:[function(require,module,exports){
-module.exports = "<button id=\"toggle-sidebar\" class=\"btn btn-primary\">\n\t<%=props.label%>\n</button>\n<div class=\"row\">\n\t<div class=\"col-xs-12\">\n\t\t<h2><%=vendor.name%></h2>\n\t</div>\n</div>";
+module.exports = "<button id=\"toggle-sidebar\" class=\"btn btn-primary\">\n\t<%=props.label%>\n</button>\n<div class=\"row\">\n\t<div class=\"col-xs-12\">\n    <h2><%=vendor.status%> : <%=vendor.name%></h2>\n    <div id=\"vendor-violations\">\n      <% if (vendor.bugs) { %> bugs <% } %>\n      <% if (vendor.slime) { %> slime <% } %>\n      <% if (vendor.rats) { %> rats <% } %>\n      <% if (vendor.condemned) { %> condemend <% } %>\n    </div>\n    <div id=\"vendor-inspections\">\n      <% _.forEach(vendor.inspections, function(insp) { %>\n      <div id=\"vendor-inspection\">\n        <%= insp.status %> on <%= insp.date %>\n        <div id=\"vendor-violations\">\n          <% _.forEach(insp.violations, function(viol) { %>\n            <div class=\"violation-weight\">\n              weight: <%= viol.weight %>\n            </div>\n            <div class=\"violation-comment\">\n              <%= viol.comments %>\n            </div>\n          <% }); %>\n        </div>\n      <% }); %>\n      </div>\n    </div>\n\t</div>\n</div>\n";
 
 },{}],10:[function(require,module,exports){
 module.exports = "<span>Sort me</span>";
