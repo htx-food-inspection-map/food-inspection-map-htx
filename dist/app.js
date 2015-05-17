@@ -48,35 +48,24 @@ var FilterComponent = Backbone.View.extend({
 });
 
 module.exports = FilterComponent;
-},{"./templates/filter.html":8,"backbone":14,"lodash":18}],4:[function(require,module,exports){
-module.exports = '<img src="img/leaflet/marker-icon.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable icon-marker"><img src="img/leaflet/marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated"><div class="hoverIcons"><img src="./img/nastyIconPlaceholder.png" class="rodent-icon"><img src="./img/nastyIconPlaceholder.png" class="slime-icon"><img src="./img/nastyIconPlaceholder.png" class="bug-icon"></div>'
-},{}],5:[function(require,module,exports){
+},{"./templates/filter.html":7,"backbone":14,"lodash":18}],4:[function(require,module,exports){
 var _ = require('lodash')
 var Backbone = require('backbone')
 var L = require('leaflet');
 
-var hoverIconHtml = require('./hoverIcons')
-var hoverIcon = L.divIcon({className: 'div-marker', html: hoverIconHtml})
+var hoverIconTemplate = _.template(require('./templates/hoverIcon.html'));
+var grades = ['A','B','C','D','F'];
 
 var MapComponent = Backbone.View.extend({
 
 	el: "#map",
 
 	initialize: function(data) {
-		this._map = L.map(this.el).setView([29.762778, -95.383056], 11);
 		this._data = data;
-	},
+		this._markers = {};
 
-	triggerVendorEvent: function(vendorData) {
-		var view = this;
+		this._map = L.map(this.el).setView([29.762778, -95.383056], 11);
 
-		return function (mapEvent) {
-			console.log(vendorData)
-			view.trigger('select:vendor', vendorData.id);
-		}
-	},
-
-	render: function() {
 		L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/maptile/{mapID}/normal.day/{z}/{x}/{y}/256/png8?app_id={app_id}&app_code={app_code}', {
 			attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
 			subdomains: '1234',
@@ -86,19 +75,35 @@ var MapComponent = Backbone.View.extend({
 			base: 'base',
 			maxZoom: 20
 		}).addTo(this._map);
+	},
 
-		// algorithm for paring down
+	triggerVendorEvent: function(vendorData) {
+		var view = this;
 
+		return function (mapEvent) {
+			view.trigger('select:vendor', vendorData.id);
+		}
+	},
+
+	render: function() {
 		_.forEach(this._data.slice(0, 100), function(val) {
+			console.log(val)
+			var badgeData = _.pick(val, 'rats', 'bugs', 'slime');
+			var grade = grades[val.score + 1];
+
+			var hoverIcon = L.divIcon({className: 'div-marker', html: hoverIconTemplate({badges: badgeData, grade: grade, status: val.status, name: val.name})})
+
 			var vendor = L.marker([val.lat, val.lng], {icon: hoverIcon}).addTo(this._map);
+
 			vendor.on('click', this.triggerVendorEvent(val));
+			this._markers[val.id] = vendor;
 		}.bind(this))
 
 	}
 })
 
 module.exports = MapComponent;
-},{"./hoverIcons":4,"backbone":14,"leaflet":17,"lodash":18}],6:[function(require,module,exports){
+},{"./templates/hoverIcon.html":8,"backbone":14,"leaflet":17,"lodash":18}],5:[function(require,module,exports){
 var _ = require('lodash');
 var Backbone = require('backbone');
 
@@ -133,7 +138,7 @@ var SidebarComponent = Backbone.View.extend({
 
 	render: function(data) {
 		if (!_.isEmpty(data)) {
-			this.vendor = _.clone(data)
+			this.vendor = data;
 			this.showing = true;
 		}
 		if (_.isEmpty(this.vendor)) return;
@@ -154,7 +159,7 @@ var SidebarComponent = Backbone.View.extend({
 
 module.exports = SidebarComponent;
 
-},{"./templates/sidebar.html":9,"backbone":14,"lodash":18}],7:[function(require,module,exports){
+},{"./templates/sidebar.html":9,"backbone":14,"lodash":18}],6:[function(require,module,exports){
 var _ = require('lodash');
 var Backbone = require('backbone');
 
@@ -170,11 +175,14 @@ var SortComponent = Backbone.View.extend({
 });
 
 module.exports = SortComponent;
-},{"./templates/sort.html":10,"backbone":14,"lodash":18}],8:[function(require,module,exports){
+},{"./templates/sort.html":10,"backbone":14,"lodash":18}],7:[function(require,module,exports){
 module.exports = "<span>Filter me</span>";
 
+},{}],8:[function(require,module,exports){
+module.exports = "<div class=\"pin leaflet-marker-icon leaflet-zoom-animated leaflet-clickable icon-marker <%=status%>\"></div>\n<img src=\"img/leaflet/marker-shadow.png\" class=\"leaflet-marker-shadow leaflet-zoom-animated\">\n<div class=\"hoverIcons\">\n\t<ul>\n\t<% _.each(badges, function(bool, badge){\n\t\tif (bool) {%>\n\t\t<li>\n\t\t\t<img src=\"./img/badges/<%=badge%>.png\">\n\t\t</li>\n\t<% \t}\n\t});%>\n\t\t<li><%=grade%></li>\n\t\t<li class=\"hover-name\"><%= name %></li>\n\t</ul>\n</div>";
+
 },{}],9:[function(require,module,exports){
-module.exports = "<button id=\"toggle-sidebar\" class=\"btn btn-primary\">\n\t<%=props.label%>\n</button>\n<div class=\"row\">\n\t<div class=\"col-xs-12\">\n    <h2><%=vendor.status%> : <%=vendor.name%></h2>\n    <div id=\"vendor-violations\">\n      <% if (vendor.bugs) { %> bugs <% } %>\n      <% if (vendor.slime) { %> slime <% } %>\n      <% if (vendor.rats) { %> rats <% } %>\n      <% if (vendor.condemned) { %> condemend <% } %>\n    </div>\n    <div id=\"vendor-inspections\">\n      <% _.forEach(vendor.inspections, function(insp) { %>\n      <div id=\"vendor-inspection\">\n        <%= insp.status %> on <%= insp.date %>\n        <div id=\"vendor-violations\">\n          <% _.forEach(insp.violations, function(viol) { %>\n            <div class=\"violation-weight\">\n              weight: <%= viol.weight %>\n            </div>\n            <div class=\"violation-comment\">\n              <%= viol.comments %>\n            </div>\n          <% }); %>\n        </div>\n      <% }); %>\n      </div>\n    </div>\n\t</div>\n</div>\n";
+module.exports = "<button id=\"toggle-sidebar\" class=\"btn btn-primary\">\n\t<%=props.label%>\n</button>\n<div class=\"row\">\n\t<% console.log(vendor) %>\n\t<div class=\"col-xs-12\">\n    <h2><%=vendor.status%> : <%=vendor.name%></h2>\n    <div id=\"vendor-violations\">\n      <% if (vendor.bugs) { %> bugs <% } %>\n      <% if (vendor.slime) { %> slime <% } %>\n      <% if (vendor.rats) { %> rats <% } %>\n      <% if (vendor.condemned) { %> condemend <% } %>\n    </div>\n    <div id=\"vendor-inspections\">\n      <% _.forEach(vendor.inspections, function(insp) { %>\n      <div id=\"vendor-inspection\">\n        <%= insp.status %> on <%= insp.date %>\n        <div id=\"vendor-violations\">\n          <% _.forEach(insp.violations, function(viol) { %>\n            <div class=\"violation-weight\">\n              weight: <%= viol.weight %>\n            </div>\n            <div class=\"violation-comment\">\n              <%= viol.comments %>\n            </div>\n          <% }); %>\n        </div>\n      <% }); %>\n      </div>\n    </div>\n\t</div>\n</div>\n";
 
 },{}],10:[function(require,module,exports){
 module.exports = "<span>Sort me</span>";
@@ -217,7 +225,6 @@ var SortComponent = require('../components/sort');
 var FilterComponent = require('../components/filter');
 var MapComponent = require('../components/map');
 
-
 var HomeView = Backbone.View.extend({
 
 	el: '#app',
@@ -234,12 +241,6 @@ var HomeView = Backbone.View.extend({
 		this._map = new MapComponent(this._getMapData());
 		this._map.render();
 
-		this._sort = new SortComponent(this._sortData);
-		this._sort.render();
-
-		this._filter = new FilterComponent(this._filterData);
-		this._filter.render();
-
 		this._sidebar = new SidebarComponent();
 		this._sidebar.render();
 
@@ -251,24 +252,24 @@ var HomeView = Backbone.View.extend({
 	_showVendor: function(vendorId) {
 		var activeVendor = _.findWhere(this.collection.models, {id: vendorId})
 		if (!activeVendor._fetched) activeVendor._fetch(vendorId).then(function() {
-			activeVendor._fetched = true;
-			console.log(activeVendor.attributes)
+			activeVendor.set('_fetched', true);
 			this._sidebar.render(activeVendor.attributes);
 		}.bind(this))
 		else this._sidebar.render(activeVendor.attributes);
 	},
 
-	_getMapData: function() {
-		return _.map(this.collection.models, function(val) {
-			var newVal = _.pick(val.attributes, ['lat', 'lng', 'bugs', 'rats', 'score', 'slime', 'status', 'id']);
+	_getMapData: function(data) {
+		if (!data) data = this.collection.models;
+		return _.map(data, function(val) {
+			var newVal = _.pick(val.attributes, ['lat', 'lng', 'bugs', 'rats', 'score', 'slime', 'status', 'id', 'name']);
 			return newVal;
 		});
 	},
 });
 
 module.exports = HomeView;
-},{"../components/filter":3,"../components/map":5,"../components/sidebar.js":6,"../components/sort":7,"./templates/home.html":13,"backbone":14,"leaflet":17,"lodash":18}],13:[function(require,module,exports){
-module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n\t<div id=\"searchbar\">\n\t\t<div class=\"form-group\">\n\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"find a restaurant\">\n\t\t</div>\n\t</div>\n\t<div id=\"controls\">\n\t\t<div id=\"sort\"></div>\n\t\t<div id=\"filter\"></div>\n\t</div>\n</div>\n<div id=\"sidebar\" class=\"container close-sidebar\"></div>\n";
+},{"../components/filter":3,"../components/map":4,"../components/sidebar.js":5,"../components/sort":6,"./templates/home.html":13,"backbone":14,"leaflet":17,"lodash":18}],13:[function(require,module,exports){
+module.exports = "<div id=\"map-container\">\n\t<div id=\"map\"></div>\n<!-- \t<div id=\"searchbar\">\n\t\t<form class=\"form-group\">\n\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"find a restaurant\">\n\t\t</form>\n\t</div> -->\n\t<div id=\"controls\">\n\t\t<img src=\"./img/buggg.png\">\n\t\t<h3>Food<br>Inspection<br>Map<br><i>HTX</i></h3>\n\t</div>\n</div>\n<div id=\"sidebar\" class=\"container close-sidebar\"></div>\n";
 
 },{}],14:[function(require,module,exports){
 (function (global){
